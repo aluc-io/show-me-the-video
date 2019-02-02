@@ -7,7 +7,7 @@ git 저장소 루트 경로에 `show-me-the-video` 라는 디렉토리를 생성
 마크다운(`.md`) 파일을 아래 규칙과 같이 작성하는 것만으로 YouTube 와 같은
 비디오 클립 웹페이지를 가질 수 있음. [git 저장소 예제][smtv_example] 참고!
 
-이 프로젝트는 [nextjs custom-server-typescript][nextjs_ts] 로 부트스트랩.
+- 이 프로젝트는 [nextjs custom-server-typescript][nextjs_ts] 로 부트스트랩.
 
 # 유저 가이드
 
@@ -18,7 +18,7 @@ git 저장소 루트 경로에 `show-me-the-video` 라는 디렉토리를 생성
 export SMTV_CLONE_REPO_URL=https://github.com/aluc-io/show-me-the-video-example
 export SMTV_PUBLIC_REPO_URL=https://github.com/aluc-io/show-me-the-video-example
 export SMTV_TITLE="My Video Clip"
-export SMTV_REPO_TYPE=GITLAB # GITLAB | GITHUB
+export SMTV_REPO_TYPE=GITLAB
 export SMTV_MANAGER_ID=your-name
 export SMTV_HOST=smtv.aluc.io
 ```
@@ -28,7 +28,7 @@ export SMTV_HOST=smtv.aluc.io
 | SMTV_CLONE_REPO_URL  | 백엔드 git 저장소를 clone 할 수 있는 주소                 |
 | SMTV_PUBLIC_REPO_URL | 백엔드 git 저장소의 웹 호스트 url                         |
 | SMTV_TITLE           | 비디오 클립 제목                                          |
-| SMTV_REPO_TYPE       | 백엔드 git 저장소의 호스트 구분. `gitlab` | `github`      |
+| SMTV_REPO_TYPE       | 백엔드 git 저장소의 호스트 구분. `GITLAB` \| `GITHUB`     |
 | SMTV_MANAGER_ID      | 백엔드 git 저장소의 관리자 id                             |
 | SMTV_HOST            | SMTV 웹사이트 host                                        |
 
@@ -95,7 +95,7 @@ $ docker run --rm -d -p8082:80 alucio/show-me-the-video-example
 ## 기여하기
 모든 pull request 를 환영합니다.
 
-1. 이 저장소 Fork (https://github.com/aluc-io/gitlab-runner-with-ecr)
+1. 이 저장소 Fork (https://github.com/aluc-io/show-me-the-video)
 1. 새로운 브랜치 생성. 브래치 네이밍 예:
     - feat/my-new-feature
     - fix/some-bug
@@ -109,4 +109,5 @@ $ docker run --rm -d -p8082:80 alucio/show-me-the-video-example
 Released under The MIT License.
 
 [smtv_example]: https://github.com/aluc-io/show-me-the-video-example
+[nextjs_ts]: https://github.com/zeit/next.js/tree/master/examples/custom-server-typescript
 

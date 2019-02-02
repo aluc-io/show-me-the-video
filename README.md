@@ -1,6 +1,6 @@
 # show-me-the-video (SMTV)
 SMTV is the project that generates a video clip web page similar to YouTube by
-parsing **the markdown documents*8 including the video contents. You can use
+parsing **the markdown documents** including the video contents. You can use
 github, gitlab as **backend repository** to create this web page.
 
 Create a directory `show-me-the-video` in the repository root path and write
@@ -8,7 +8,8 @@ markdown files(`*.md`) in this directory as shown in the following rules then
 you can get the web site similar to YouTube. Refer [the example git
 repository][smtv_example]!
 
-This project is bootstrapped by [nextjs custom-server-typescript][nextjs_ts].
+- This project is bootstrapped by [nextjs custom-server-typescript][nextjs_ts].
+- 한글 가이드: [README.ko.md](./README.ko.md)
 
 # Usage
 
@@ -19,7 +20,7 @@ Example:
 export SMTV_CLONE_REPO_URL=https://github.com/aluc-io/show-me-the-video-example
 export SMTV_PUBLIC_REPO_URL=https://github.com/aluc-io/show-me-the-video-example
 export SMTV_TITLE="My Video Clip"
-export SMTV_REPO_TYPE=GITLAB # GITLAB | GITHUB
+export SMTV_REPO_TYPE=GITLAB
 export SMTV_MANAGER_ID=your-name
 export SMTV_HOST=smtv.aluc.io
 ```
@@ -29,7 +30,7 @@ export SMTV_HOST=smtv.aluc.io
 | SMTV_CLONE_REPO_URL  | Clone url of backend git repostiory                       |
 | SMTV_PUBLIC_REPO_URL | Web host url of backend git repository                    |
 | SMTV_TITLE           | Video clip's title                                        |
-| SMTV_REPO_TYPE       | Host type of backend git repository. `gitlab` | `github`  |
+| SMTV_REPO_TYPE       | Host type of backend git repository. `GITLAB` \| `GITHUB` |
 | SMTV_MANAGER_ID      | Admin id of backend git repository host site              |
 | SMTV_HOST            | SMTV website host                                         |
 
@@ -97,7 +98,7 @@ $ docker run --rm -d -p8082:80 alucio/show-me-the-video-example
 ## Contributing
 All pull requests are welcome.
 
-1. Fork this repository (https://github.com/aluc-io/gitlab-runner-with-ecr)
+1. Fork this repository (https://github.com/aluc-io/show-me-the-video)
 1. Create your new branch. branch naming rule:
     - feat/my-new-feature
     - fix/some-bug
@@ -111,4 +112,4 @@ All pull requests are welcome.
 Released under The MIT License.
 
 [smtv_example]: https://github.com/aluc-io/show-me-the-video-example
-
+[nextjs_ts]: https://github.com/zeit/next.js/tree/master/examples/custom-server-typescript
