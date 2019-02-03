@@ -4,7 +4,7 @@ import { find } from 'lodash'
 
 export const getVideoInfoArr = async () => {
   const [err,res] = await to( axios.get('/api/v1/list'))
-  if (err) throw err
+  if (err || !res) throw err
 
   return res.data
 }
@@ -15,7 +15,7 @@ export const getGuideInfo = async (id: string) => {
   if (videoInfo) return videoInfo
 
   const [err,res] = await to( axios.get('/api/v1/guide/' + id))
-  if (err) throw err
+  if (err || !res) throw err
 
   return res.data
 }

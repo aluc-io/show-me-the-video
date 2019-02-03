@@ -1,18 +1,15 @@
 import * as React from 'react'
 import App, { Container, NextAppContext } from 'next/app'
 import { createGlobalStyle } from 'styled-components'
-import getConfig from 'next/config'
 
 import { useShowLayout, useVideoInfoArr } from '../state'
 import { AppContext } from '../context'
 import { getVideoInfoArr } from '../core'
-import { SingletonRouter } from 'next/router';
 
 import "normalize.css";
 
 // import '../font.css'
 
-const {publicRuntimeConfig} = getConfig()
 const GlobalStyle = createGlobalStyle`
 * {
   box-sizing: border-box;

@@ -1,7 +1,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "noEmit": true,
+    "noEmit": false,
     "target": "esnext",
     "module": "esnext",
     "jsx": "preserve",

@@ -103,3 +103,4 @@ typings/
 
 /.envrc
 /git-repositories
+/dist

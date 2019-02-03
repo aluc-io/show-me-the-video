@@ -1,8 +1,8 @@
 {
   "scripts": {
     "dev": "nodemon",
-    "build": "next build && tsc --project tsconfig.server.json",
-    "start": "cross-env NODE_ENV=production node dist/index.js"
+    "build": "next build src && tsc --project tsconfig.server.json",
+    "start": "cross-env NODE_ENV=production node dist/server.js"
   },
   "dependencies": {
     "@blueprintjs/core": "^3.10.0",
@@ -44,8 +44,8 @@
     "@types/readdir-enhanced": "^2.2.0",
     "@types/styled-components": "^4.1.4",
     "@types/styled-system": "^3.1.0",
-    "babel-plugin-styled-components": "^1.10.0",
     "cross-env": "^5.2.0",
+    "babel-plugin-styled-components": "^1.10.0",
     "less": "^3.9.0",
     "nodemon": "^1.18.8",
     "ts-node": "^7.0.1",

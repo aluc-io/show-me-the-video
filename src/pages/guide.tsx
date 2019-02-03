@@ -7,7 +7,7 @@ import * as ReactMarkdown from 'react-markdown'
 import { Player, BigPlayButton, ControlBar, PlaybackRateMenuButton } from 'video-react'
 import { space, width, fontSize, color } from 'styled-system'
 import "video-react/dist/video-react.css"
-import { Button as BPButton, Intent, Slider, KeyCombo } from "@blueprintjs/core";
+import { Button as BPButton, Intent } from "@blueprintjs/core";
 import * as mime from 'mime-types'
 import Ripples from 'react-ripples'
 
@@ -23,7 +23,7 @@ import Header from '../component/Header'
 import { IGuideInfo, IStatelessPage, ICommonStyledProps } from 'global';
 const { publicRuntimeConfig } = getConfig()
 
-const { SMTV_URL, SMTV_PUBLIC_REPO_URL, SMTV_MANAGER_ID } = publicRuntimeConfig
+const { /*SMTV_URL,*/ SMTV_PUBLIC_REPO_URL, /*SMTV_MANAGER_ID*/ } = publicRuntimeConfig
 
 interface GuideProps {
   guideInfo: IGuideInfo
@@ -38,12 +38,6 @@ const Page = styled.div`
   display: flex;
   min-height: 100vh;
   flex-direction: column;
-`
-
-const Card = styled(BPCard)<ICommonStyledProps>`
-  background-color: blue;
-  color: white;
-  d: ${p => p.showLayout ? 'd' : 'f'};
 `
 
 const Content = styled(BPCard)<ICommonStyledProps>`
@@ -103,12 +97,13 @@ const customRenderers: ReactMarkdown.Renderers = {
 }
 
 const Guide: IStatelessPage<GuideProps> = (props) => {
-  const { router } = props
+  // const { router } = props
   if (!props.guideInfo) {
     return <pre>{JSON.stringify(props,null,2)}</pre>
   }
-  const { id, videoUrl, text, thumbnailUrl, filename } = props.guideInfo
+  const { /*id,*/videoUrl, text, thumbnailUrl, filename } = props.guideInfo
 
+  /*
   const issueTitle = encodeURIComponent(`
   영상 가이드(${id}) 관련 문의/제안 드립니다
   `.trim())
@@ -125,6 +120,8 @@ const Guide: IStatelessPage<GuideProps> = (props) => {
   
   /assign @${SMTV_MANAGER_ID}
   `.trim())
+  */
+
   return (
     <Page>
       <Header />
