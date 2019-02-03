@@ -1,23 +1,21 @@
+import { TGetDocInfo, TGetSiteInfo, TGetRepoInfoArr, TGetRepoInfo } from './interface';
 
-const isServer: boolean = !! process.env.SMTV_CLONE_REPO_URL
+const isServer: boolean = process.env.IS_SERVER === "true"
 
-const getVideoInfoArr = () => {
-  // './server' 쪽 코드가 client 환경으로 내려가지 않도록
-  // webpack.IgnorePlugin 으로 처리해줘야한다
-  return isServer
-    ? require('./server').getVideoInfoArr()
-    : require('./client').getVideoInfoArr()
+console.log(`isServer: ${isServer}`)
+interface ICoreCommon {
+  getDocInfo: TGetDocInfo
+  getSiteInfo: TGetSiteInfo
+  getRepoInfoArr: TGetRepoInfoArr
+  getRepoInfo: TGetRepoInfo
 }
 
-const getGuideInfo = (guideId: string) => {
-  // './server' 쪽 코드가 client 환경으로 내려가지 않도록
-  // webpack.IgnorePlugin 으로 처리해줘야한다
-  return isServer
-    ? require('./server').getGuideInfo(guideId)
-    : require('./client').getGuideInfo(guideId)
+let common: ICoreCommon
+if (isServer) {
+  common = require('./server')
+} else {
+  common = require('./client')
 }
 
-export {
-  getVideoInfoArr,
-  getGuideInfo,
-}
+const { getDocInfo, getRepoInfo, getRepoInfoArr, getSiteInfo } = common
+export { getDocInfo, getRepoInfo, getRepoInfoArr, getSiteInfo }

@@ -104,3 +104,4 @@ typings/
 /.envrc
 /git-repositories
 /dist
+/application.yml

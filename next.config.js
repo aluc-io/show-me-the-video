@@ -8,6 +8,7 @@ let customConfig = {
 
     const { IgnorePlugin } = webpack
     config.plugins.push(new IgnorePlugin(/\.\/server$/))
+
     config.watchOptions = {
       ignored: [
         /\.git\//,
@@ -18,12 +19,7 @@ let customConfig = {
     return config
   },
   serverRuntimeConfig: {
-    SMTV_CLONE_REPO_URL: process.env.SMTV_CLONE_REPO_URL,
-  },
-  publicRuntimeConfig: {
-    SMTV_PUBLIC_REPO_URL: process.env.SMTV_PUBLIC_REPO_URL,
-    SMTV_TITLE: process.env.SMTV_TITLE,
-    SMTV_REPO_TYPE: process.env.SMTV_REPO_TYPE,
+    isServer: true,
   },
 }
 

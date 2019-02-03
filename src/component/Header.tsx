@@ -1,12 +1,10 @@
 import { withRouter, SingletonRouter } from 'next/router'
 import * as React from 'react'
-import getConfig from 'next/config'
 import styled from 'styled-components'
 
 import { ICommonStyledProps } from 'global'
 import { AppContext } from '../context'
 import { useContext } from 'react';
-const {publicRuntimeConfig} = getConfig()
 
 const Box = styled.div<ICommonStyledProps>`
   -webkit-box-align: center;
@@ -61,15 +59,15 @@ interface IHeaderProps {
 }
 
 const Header: React.FunctionComponent<IHeaderProps> = props => {
-  const { showLayout, toggleShowLayout } = useContext(AppContext)
+  const { showLayout, toggleShowLayout, siteInfo } = useContext(AppContext)
   const { pathname } = props.router
-  const { SMTV_TITLE } = publicRuntimeConfig
+  const { title } = siteInfo
 
   return (
     <Box showLayout={showLayout}>
       <H1 showLayout={showLayout}>
-        {pathname !== '/' && <a href={`/`}>{SMTV_TITLE}</a>}
-        {pathname === '/' && SMTV_TITLE}
+        {pathname !== '/' && <a href={`/`}>{title}</a>}
+        {pathname === '/' && title}
       </H1>
       <TextButtonBox>
         <TextButton onClick={toggleShowLayout}>layout</TextButton>

@@ -1,6 +1,5 @@
 import { useState } from 'react'
-import { getVideoInfoArr } from '../core'
-import { IGuideInfo } from 'global';
+import { IRepoInfo } from 'global';
 
 export const useShowLayout = (initialValue: boolean) => {
   initialValue = !! initialValue
@@ -9,18 +8,17 @@ export const useShowLayout = (initialValue: boolean) => {
   return { showLayout, toggleShowLayout }
 }
 
-export const useVideoInfoArr = (initialValue: Array<IGuideInfo>) => {
-  const [videoInfoArr, setVideoInfoArr] = useState(initialValue)
+export const useRepoInfoArr = (initialValue: Array<IRepoInfo>) => {
+  const [repoInfoArr, setRepoInfoArr] = useState(initialValue)
+  return { repoInfoArr, setRepoInfoArr }
+}
 
-  if (videoInfoArr.length < 1 ) {
-    console.log('videoInfoArr.length < 1 ')
-    getVideoInfoArr().then( setVideoInfoArr )
-  }
-
-  return videoInfoArr
+export const useSiteInfo = (initialValue: any) => {
+  const [siteInfo, setSiteInfo] = useState(initialValue)
+  return { siteInfo, setSiteInfo }
 }
 
 export default {
   useShowLayout,
-  useVideoInfoArr,
+  useRepoInfoArr,
 }

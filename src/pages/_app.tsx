@@ -1,48 +1,25 @@
 import * as React from 'react'
-import App, { Container, NextAppContext } from 'next/app'
-import { createGlobalStyle } from 'styled-components'
+import App, { Container, NextAppContext, DefaultAppIProps, AppProps } from 'next/app'
 
-import { useShowLayout, useVideoInfoArr } from '../state'
+import { useShowLayout, useRepoInfoArr, useSiteInfo } from '../state'
 import { AppContext } from '../context'
-import { getVideoInfoArr } from '../core'
+import { getRepoInfoArr, getSiteInfo } from '../core'
+import { GlobalStyle } from '../style/GlobalStyle'
+import { ISiteInfo, IRepoInfo } from 'global';
 
-import "normalize.css";
-
-// import '../font.css'
-
-const GlobalStyle = createGlobalStyle`
-* {
-  box-sizing: border-box;
+interface IAppProps extends DefaultAppIProps, AppProps {
+  repoInfoArr: Array<IRepoInfo>
+  siteInfo: ISiteInfo
+  showLayout: boolean
 }
-a {
-  text-decoration: none;
-}
-a:visited {
-  text-decoration: none;
-}
-html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
-  vertical-align: baseline;
-  margin: 0px;
-  padding: 0px;
-  border-width: 0px;
-  border-style: initial;
-  border-color: initial;
-  border-image: initial;
-  font: inherit;
-}
-`
 
-const CustomApp = (props) => {
-  const { Component, pageProps } = props
-  const { showLayout, toggleShowLayout } = useShowLayout(true)
-  const videoInfoArr = useVideoInfoArr(props.videoInfoArr)
-
-  const value = {
-    showLayout,
-    toggleShowLayout,
-    videoInfoArr,
+const CustomApp = (props: IAppProps) => {
+  const { Component, pageProps, repoInfoArr, siteInfo, showLayout } = props
+  const value = { 
+    ...useShowLayout(showLayout),
+    ...useRepoInfoArr(repoInfoArr),
+    ...useSiteInfo(siteInfo),
   }
-
   return (
     <AppContext.Provider value={value}>
       <GlobalStyle />
@@ -53,7 +30,7 @@ const CustomApp = (props) => {
   )
 }
 
-class CustomAppWrapper extends App {
+class CustomAppWrapper extends App<IAppProps> {
   static async getInitialProps({ Component, router, ctx }: NextAppContext) {
     let pageProps = {}
 
@@ -61,11 +38,15 @@ class CustomAppWrapper extends App {
       pageProps = await Component.getInitialProps(ctx)
     }
 
-    const videoInfoArr = await getVideoInfoArr()
-    return { videoInfoArr, pageProps, router }
+    const repoInfoArr = await getRepoInfoArr()
+    const siteInfo = await getSiteInfo()
+    const showLayout = true
+    return { repoInfoArr, siteInfo, pageProps, router, showLayout }
   }
 
   render() {
+    // Splited function Component is needed,
+    // because hooks can only be called inside the body of a function component.
     return <CustomApp {...this.props}/>
   }
 }

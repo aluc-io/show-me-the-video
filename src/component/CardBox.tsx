@@ -1,14 +1,13 @@
-import { useContext } from 'react'
 import * as React from 'react'
 
-import { AppContext } from '../context'
+import { IRepoInfo } from 'global';
 import styled from '../style/styled-component'
 import media from '../style/media'
 import { layout as lo } from '../style/polished'
 import Card from './Card'
 
-const CardBox = styled.div`
-  margin: .8em;
+const CardBoxRoot = styled.div`
+  margin: .8em .8em 1.4em .8em;
 `
 
 const Grid = styled.div`
@@ -38,16 +37,20 @@ const Title = styled.div`
   ${p => lo(p.theme.showLayout, "", "rgba(193, 83, 133, 0.45)")}
 `
 
-export default () => {
-  const { videoInfoArr } = useContext(AppContext)
+interface IProps {
+  repoInfo: IRepoInfo
+}
+
+export const CardBox: React.FunctionComponent<IProps> = (props)=> {
+  const { title, docInfoArr, idx } = props.repoInfo
   return (
-    <CardBox>
+    <CardBoxRoot>
       <GridTitle>
-        <Title>My video clip</Title>
+        <Title>{title}</Title>
       </GridTitle>
       <Grid>
-        {videoInfoArr.map( (info,i) => <Card key={i} {...info} />)}
+        {docInfoArr.map( (info,i) => <Card key={i} repoIdx={idx} {...info} />)}
       </Grid>
-    </CardBox>
+    </CardBoxRoot>
   )
 }

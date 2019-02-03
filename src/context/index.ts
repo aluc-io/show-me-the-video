@@ -1,14 +1,20 @@
 import { createContext } from 'react'
-import { IGuideInfo } from 'global';
+import { IRepoInfo, ISiteInfo } from 'global';
 
 interface IAppContext {
   showLayout: boolean
   toggleShowLayout: () => void
-  videoInfoArr: Array<IGuideInfo>
+  siteInfo: ISiteInfo
+  setSiteInfo: (siteInfo: ISiteInfo) => void
+  repoInfoArr: Array<IRepoInfo>
+  setRepoInfoArr: (repoArr: Array<IRepoInfo>) => void
 }
 
 export const AppContext = createContext<IAppContext>({
   showLayout: true,
   toggleShowLayout: () => {},
-  videoInfoArr: [],
+  siteInfo: { title: '', host: '' },
+  setSiteInfo: () => {},
+  repoInfoArr: [],
+  setRepoInfoArr: () => {},
 })

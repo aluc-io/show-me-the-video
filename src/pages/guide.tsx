@@ -1,6 +1,6 @@
 import * as React from 'react'
+import { isArray } from 'lodash'
 import { withRouter, SingletonRouter } from 'next/router'
-import getConfig from 'next/config'
 import { Card as BPCard } from '@blueprintjs/core'
 import styled from 'styled-components'
 import * as ReactMarkdown from 'react-markdown'
@@ -11,24 +11,16 @@ import { Button as BPButton, Intent } from "@blueprintjs/core";
 import * as mime from 'mime-types'
 import Ripples from 'react-ripples'
 
-
 // import { Classes } from "@blueprintjs/core"
 import "@blueprintjs/core/lib/css/blueprint.css";
 // import "@blueprintjs/icons/lib/css/blueprint-icons.css";
 
-import { CONST_DIR_NAME } from '../core/constant'
+import { CONST_DOC_DIRECTORY } from '../core/constant'
 import markdownCss from '../markdownCss'
-import { getGuideInfo } from '../core'
+import { getDocInfo, getRepoInfo } from '../core'
 import Header from '../component/Header'
-import { IGuideInfo, IStatelessPage, ICommonStyledProps } from 'global';
-const { publicRuntimeConfig } = getConfig()
-
-const { /*SMTV_URL,*/ SMTV_PUBLIC_REPO_URL, /*SMTV_MANAGER_ID*/ } = publicRuntimeConfig
-
-interface GuideProps {
-  guideInfo: IGuideInfo
-  router: SingletonRouter
-}
+import { IStatelessPage, ICommonStyledProps, IDocInfo, IRepoInfo } from 'global';
+import { NextContext } from 'next';
 
 const Page = styled.div`
   ${space}
@@ -96,12 +88,23 @@ const customRenderers: ReactMarkdown.Renderers = {
   },
 }
 
-const Guide: IStatelessPage<GuideProps> = (props) => {
+
+
+interface IGuideProps {
+  repoIdx: number
+  docInfo: IDocInfo
+  repoInfo: IRepoInfo
+  router: SingletonRouter
+}
+
+const Guide: IStatelessPage<IGuideProps> = (props) => {
   // const { router } = props
-  if (!props.guideInfo) {
+  const { repoInfo, docInfo } = props
+  if (!docInfo || !repoInfo) {
     return <pre>{JSON.stringify(props,null,2)}</pre>
   }
-  const { /*id,*/videoUrl, text, thumbnailUrl, filename } = props.guideInfo
+  const { publicUrl } = repoInfo
+  const { /*id,*/videoUrl, text, thumbnailUrl, filename } = docInfo
 
   /*
   const issueTitle = encodeURIComponent(`
@@ -150,7 +153,7 @@ const Guide: IStatelessPage<GuideProps> = (props) => {
               </Button>
             </Ripples>
             <Button large={true}>
-              <a target='_blank' href={`${SMTV_PUBLIC_REPO_URL}/edit/master/${CONST_DIR_NAME}/${filename}`}>
+              <a target='_blank' href={`${publicUrl}/edit/master/${CONST_DOC_DIRECTORY}/${filename}`}>
                 편집
               </a>
             </Button>
@@ -161,10 +164,18 @@ const Guide: IStatelessPage<GuideProps> = (props) => {
   )
 }
 
-Guide.getInitialProps = async ({ req }) => {
-  const guideId = req.params.guideId
-  const guideInfo = await getGuideInfo(guideId)
-  console.log('guideInfo: ' + guideInfo)
-  return { guideInfo }
+Guide.getInitialProps = async (ctx: NextContext) => {
+  let repoIdx = ctx.query.repoIdx
+  let guideId = ctx.query.guideId
+  if (!repoIdx || !guideId) {
+    throw new Error('SMTV_ERROR_3981')
+  }
+  if (isArray(repoIdx)) repoIdx = repoIdx[0]
+  if (isArray(guideId)) guideId = guideId[0]
+
+  console.log(`Guide.getInitialProps(repoIdx: ${repoIdx}, guideId: ${guideId})`)
+  const docInfo = await getDocInfo(repoIdx, guideId)
+  const repoInfo = await getRepoInfo(repoIdx)
+  return { repoInfo, docInfo }
 }
 export default withRouter(Guide)

@@ -16,6 +16,8 @@
     "skipLibCheck": true,
     "baseUrl": ".",
     "strictNullChecks": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
     "typeRoots": [
       "./node_modules/@types",
       "./src/@types"
@@ -28,6 +30,8 @@
   },
   "exclude": [
     "next.config.js",
+    "src/bin/**/*",
+    "node_modules",
     "dist"
   ]
 }

@@ -2,7 +2,7 @@ import * as React from 'react'
 import Link from 'next/link'
 
 import styled from '../style/styled-component'
-import { ICommonStyledProps, IGuideInfo } from 'global'
+import { ICommonStyledProps, IDocInfo } from 'global'
 import { layout as lo } from '../style/polished'
 import TimeAgo from 'react-timeago'
 
@@ -110,12 +110,14 @@ const SubInfo = styled.div<ICommonStyledProps>`
   text-align: left;
 `
 
-const CardComponent: React.FunctionComponent<IGuideInfo> = props => {
-  const { title, thumbnailUrl, id, createTime, author, duration } = props
+
+
+const CardComponent: React.FunctionComponent<IDocInfo & {repoIdx: number}> = props => {
+  const { repoIdx, title, thumbnailUrl, id, createTime, author, duration } = props
   const ct = new Date(createTime)
   return (
     <Card>
-      <Link href={{ pathname: `/guide/${id}` }}>
+      <Link href={{ pathname: `/${repoIdx}/${id}` }}>
         <LinkInner>
           <ImageWrapper className='image'>
             <Image src={thumbnailUrl}/>

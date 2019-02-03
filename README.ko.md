@@ -1,5 +1,5 @@
 # show-me-the-video (SMTV)
-SMTV 는 비디오 콘텐츠을 포함한 **markdown 문서**를 파싱하여 YouTube를 닮은
+SMTV 는 비디오 콘텐츠을 포함한 **Markdown 문서**를 파싱하여 YouTube를 닮은
 비디오 클립 웹페이지를 생성해주는 프로젝트. github, gitlab 과 같은 어떤 git
 저장소도 **백엔드 저장소**로 사용 할 수 있음.
 
@@ -11,26 +11,55 @@ git 저장소 루트 경로에 `show-me-the-video` 라는 디렉토리를 생성
 
 # 유저 가이드
 
-## 환경변수 셋팅
+## `application.yaml` 파일 생성
 
-예:
-```sh
-export SMTV_CLONE_REPO_URL=https://github.com/aluc-io/show-me-the-video-example
-export SMTV_PUBLIC_REPO_URL=https://github.com/aluc-io/show-me-the-video-example
-export SMTV_TITLE="My Video Clip"
-export SMTV_REPO_TYPE=GITLAB
-export SMTV_MANAGER_ID=your-name
-export SMTV_HOST=smtv.aluc.io
+Example:
+```
+# application.yml
+title: smtv example youtube
+host: smtv.aluc.io
+backendRepos:
+  - type: GITLAB
+    cloneUrl: https://github.com/aluc-io/show-me-the-video-example.git
+    publicUrl: https://github.com/aluc-io/show-me-the-video-example
+    docDirectory: show-me-the-video
+    title: IntelliJ IDEA 가이드
+    managerId: alfreduc23
+  - type: GITLAB
+    cloneUrl: https://github.com/aluc-io/show-me-the-video-example.git
+    publicUrl: https://github.com/aluc-io/show-me-the-video-example
+    docDirectory: show-me-the-video
+    title: Eclipse 가이드
+    managerId: alfreduc23
 ```
 
-| key                  | 설명                                                      |
-|----------------------|-----------------------------------------------------------|
-| SMTV_CLONE_REPO_URL  | 백엔드 git 저장소를 clone 할 수 있는 주소                 |
-| SMTV_PUBLIC_REPO_URL | 백엔드 git 저장소의 웹 호스트 url                         |
-| SMTV_TITLE           | 비디오 클립 제목                                          |
-| SMTV_REPO_TYPE       | 백엔드 git 저장소의 호스트 구분. `GITLAB` \| `GITHUB`     |
-| SMTV_MANAGER_ID      | 백엔드 git 저장소의 관리자 id                             |
-| SMTV_HOST            | SMTV 웹사이트 host                                        |
+Description:
+```
+  title: string             // SMTV 웹사이트 이름
+  host: string              // SMTV 웹사이트 host
+  backendRepos: Array<{
+    type: string            // 비디오 클립 제목
+    cloneUrl: string        // 백엔드 git 저장소를 clone 할 수 있는 주소
+    publicUrl: string       // 백엔드 git 저장소의 웹 호스트 주소
+    docDirectory: string    // Markdown 문서들이 저장된 디렉토리 이름.
+                            // Default: `show-me-the-video`
+    title: string           // 비디오 클립 제목
+    managerId: string       // 백엔드 git 저장소의 관리자 id
+  }>
+```
+
+Docker 컨테이너에서 실행 할 땐, `application.yml` 파일을 Docker 이미지 내로
+복사 하는 것 보다 `APPLICATION_CONFIG` 환경변수를 통해 제공하는 것이 더 좋다.
+`application.yml` 파일을 json 으로 변환 후 `APPLICATION_CONFIG` 환경 변수에 셋팅
+하는 방법:
+
+```sh
+$ export APPLICATION_CONFIG=$(node src/bin/yaml-to-json.js application.yml)
+
+## heroku 사용시 예제:
+$ heroku config:set APPLICATION_CONFIG=$APPLICATION_CONFIG
+$ heroku config:get APPLICATION_CONFIG
+```
 
 ## Markdown rules
 

@@ -1,10 +1,11 @@
 import { string } from 'prop-types';
+import { NextFunctionComponent } from 'next';
 
 declare module "mktemp"
 
 declare module "video-react"
 
-interface IStatelessPage<P = {}> extends React.FunctionComponent<P> {
+interface IStatelessPage<P = {}> extends NextFunctionComponent<P> {
   getInitialProps?: (ctx: any) => any
 }
 
@@ -16,15 +17,44 @@ interface ICommonStyledProps {
   showLayout?: boolean
 }
 
-interface IGuideInfo {
-  id: string
+interface IDocInfo {
+  title: string
+  subTitle: string
   videoUrl: string
   thumbnailUrl: string
-  filename: string
+  tagArr: Array<string>
+  prev: string
+  next: string
   author: string
-  title: string
-  duration: string
   createTime: string
   updateTime: string
+  duration: string
+  id: string
+  filename: string
   text: string
+}
+
+interface IRepoInfo {
+  idx: number
+  type: string
+  publicUrl: string
+  title: string
+  managerId: string
+  docInfoArr: Array<IDocInfo>
+}
+
+interface ISiteInfo {
+  title: string
+  host: string
+}
+
+interface IApplicationConfig extends ISiteInfo {
+  backendRepos: Array<{
+    type: string
+    cloneUrl: string
+    publicUrl: string
+    docDirectory: string
+    title: string
+    managerId: string
+  }>
 }
