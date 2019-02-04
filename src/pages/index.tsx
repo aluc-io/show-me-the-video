@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { useContext } from 'react';
 
-import { getRepoInfoArr } from '../core'
 import { CardBox } from '../component/CardBox'
 import Footer from '../component/Footer'
 import Header from '../component/Header'
@@ -22,12 +21,6 @@ const Index = () => {
       </Page>
     </ThemeProvider>
   )
-}
-
-Index.getInitialProps = async () => {
-  const repoInfoArr = await getRepoInfoArr()
-  console.log('guideInfo: ' + repoInfoArr)
-  return { repoInfoArr }
 }
 
 export default Index
