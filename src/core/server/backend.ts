@@ -13,6 +13,7 @@ import * as readdirEnhanced from 'readdir-enhanced'
 import * as tracer from 'tracer'
 import { CONST_GITREPO_PATH } from '../constant'
 import { oc } from 'ts-optchain'
+import * as memoizee from 'memoizee'
 
 import config from './config'
 import { IDocInfo } from "global";
@@ -20,7 +21,6 @@ import { TGetDocInfoArr } from "../interface";
 
 const fs = promises
 const logger = tracer.console()
-const { } = config
 
 const getPathFromGitRepoUrl = (url: string) => {
   if (!url) {
@@ -30,7 +30,7 @@ const getPathFromGitRepoUrl = (url: string) => {
   return `${CONST_GITREPO_PATH}/${projectName}.${md5(url)}`
 }
 
-const getRepoPath = async (repoUrl: string) => {
+const _getRepoPath = async (repoUrl: string) => {
   const dirPath = getPathFromGitRepoUrl(repoUrl)
   const dotGitPath = path.resolve(dirPath, '.git')
 
@@ -68,6 +68,8 @@ const getRepoPath = async (repoUrl: string) => {
 
   return dirPath
 }
+
+const getRepoPath = memoizee(_getRepoPath, { maxAge: 5 * 60 * 1000 })
 
 const getVideoGuideHereFileArr = (repoPath: string, docDirectory: string) => {
   const dirPath = path.resolve(repoPath, docDirectory)
