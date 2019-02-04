@@ -16,6 +16,7 @@ import { CONST_DOC_DIRECTORY } from '../core/constant'
 import markdownCss from '../markdownCss'
 import { getDocInfo, getRepoInfo } from '../core'
 import Header from '../component/Header'
+import Footer from '../component/Footer'
 import Page from '../component/Page'
 import { IStatelessPage, IDocInfo, IRepoInfo } from 'global';
 import { NextContext } from 'next';
@@ -164,6 +165,7 @@ const Guide: IStatelessPage<IGuideProps> = (props) => {
           </ButtonGrid>
         </Container>
       </Content>
+      <Footer />
     </Page>
   )
 }

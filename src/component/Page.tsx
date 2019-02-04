@@ -7,5 +7,6 @@ export default styled.div`
   overflow-y: hidden;
   background-color: rgb(249, 249, 249);
   min-width: 375px;
+  min-height: 100%;
   ${p => lo(p.theme.showLayout, "Page", "rgba(200, 200, 200, 0.75)" )}
 `
