@@ -8,6 +8,7 @@ export const layout = (showLayout: boolean, name: string, color: string) => {
     ::before {
       content: "${name}";
       position: absolute;
+      display: block;
     };
   `
 

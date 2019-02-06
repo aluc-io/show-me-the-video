@@ -1,17 +1,18 @@
-import { useContext } from 'react'
 import * as React from 'react'
-import styled from 'styled-components'
-import { AppContext } from '../context'
-import { ICommonStyledProps } from 'global'
-import { NextStatelessComponent } from 'next';
-import { WithRouterProps } from 'next/router';
+import { useEffect, useState } from 'react'
+import styled from '../style/styled-component'
+import { layout as lo } from '../style/polished'
+import { CONST_SMTV_GITHUB_URL } from '../core/constant';
 
-const Box = styled.div<ICommonStyledProps>`
-  background-color: ${p => p.showLayout ? 'rgba(133, 233, 133, 0.65)' : 'init'};
+const isServer = process.env.IS_SERVER === 'true'
+
+const Box = styled.div`
+  position: fixed;
   padding: 1em 10px;
   bottom: 0px;
   width: 100%;
   text-align: right;
+  ${p => lo(p.theme.showLayout, "FooterBox", "rgba(200, 200, 200, 0.75)" )}
 
   & h1 {
     font-family: Roboto;
@@ -23,14 +24,51 @@ const Box = styled.div<ICommonStyledProps>`
   }
 `
 
-const Footer:NextStatelessComponent<WithRouterProps> = () => {
-  const { showLayout } = useContext(AppContext)
+export const Footer = () => {
+  const restHeight = useRestHeight()
+  const opacity = (100 - restHeight) * 0.01
+  const display = opacity > 0 ? 'block' : 'none'
 
   return (
-    <Box showLayout={showLayout}>
-      <h1>Build with Show me the video</h1>
+    <Box style={{ opacity, display }}>
+      <h1>
+        <span>© 2019 alfreduc23. powered by </span>
+        <a href={CONST_SMTV_GITHUB_URL}>show-me-the-video</a>
+      </h1>
     </Box>
   )
 }
 
-export default Footer
+const useRestHeight = () => {
+  const [ restHeight, setRestHeight ] = useState(101)
+  if (isServer) return restHeight
+
+  const handleEvent = () => {
+    const maxScrollY = document.documentElement.scrollHeight - window.innerHeight
+    let newRestHeight = maxScrollY - document.documentElement.scrollTop
+    newRestHeight = newRestHeight > 100 ? 100 : newRestHeight
+    if (restHeight === newRestHeight) return
+
+    setRestHeight(newRestHeight)
+  }
+
+  useEffect( () => {
+    window.addEventListener('scroll', handleEvent)
+    window.addEventListener('resize', handleEvent)
+    return () => {
+      window.removeEventListener('scroll', handleEvent)
+      window.removeEventListener('resize', handleEvent)
+    }
+  })
+
+  if (restHeight === 101) {
+    // restHeight: 101 은 오직 컴포넌트 mount 후 최초 1회만 들어갈 수 있다!?
+    // 스크롤이 생기지 않는 페이지에서 restHeight 를 구하기 위해 호출
+    // useState 에서 호출 하면 ssr 렌더링 결과와 client 에서의 렌더링 결과가 달라지는 문제
+    // componentDidMount 에 들어갈 부분
+    window.requestAnimationFrame(handleEvent)
+  }
+
+  return restHeight
+}
+
