@@ -186,3 +186,4 @@ Guide.getInitialProps = async (ctx: NextContext) => {
 }
 
 export default withRouter(Guide)
+

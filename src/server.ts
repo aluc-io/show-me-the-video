@@ -4,7 +4,7 @@ import * as express from 'express'
 import * as next from 'next'
 import { console } from 'tracer'
 
-import { getRepoInfoArr, getDocInfo } from './core'
+import { getRepoInfoArr, getDocInfo, getSiteInfo } from './core/server'
 
 const logger = console()
 
@@ -37,6 +37,12 @@ app.prepare().then(() => {
     logger.debug('get api call: /api/v1/repoInfoArr')
     const videoInfoArr = await getRepoInfoArr()
     res.json(videoInfoArr)
+  })
+
+  server.get('/api/v1/siteInfo', async (_,res) => {
+    logger.debug('get api call: /api/v1/siteInfo')
+    const siteInfo = getSiteInfo()
+    res.json(siteInfo)
   })
 
   server.get('*', (req,res) => {
