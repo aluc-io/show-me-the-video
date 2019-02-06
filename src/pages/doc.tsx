@@ -22,6 +22,7 @@ import { IStatelessPage, IDocInfo, IRepoInfo } from 'global';
 import { NextContext } from 'next';
 
 const Content = styled.div`
+  margin-top: 20px;
   margin-bottom: 60px;
   flex: 1 1 0%;
   box-sizing: border-box;
@@ -71,14 +72,13 @@ const lookupMime = (src: string) => mime.lookup(src) ? mime.lookup(src) : void 0
 
 const customRenderers: ReactMarkdown.Renderers = {
   linkReference: (props) => {
-    const videoUrl = props!.href
-    const thumbnailUrl = props.children[0]!.props!.src
-    // videoUrl, thumbnailUrl 이 아래의 패턴의 경우
-    // 비디오 플레이어 자리. 플레이어는 따로 띄우고 있으므로 제거해줌
+    const videoUrl = props.href
+    const thumbnailUrl = props.children[0].props.src
     if (
       (lookupMime(videoUrl) || '').split('/')[0] === 'video'
       && (lookupMime(thumbnailUrl) || '').split('/')[0] === 'image'
     ) {
+      // we use custom video player on this case
       return <span style={{ display: 'none' }}/>
     }
     return <a {...props}/>
@@ -102,7 +102,7 @@ const Guide: IStatelessPage<IGuideProps> = (props) => {
     return <pre>{JSON.stringify(props,null,2)}</pre>
   }
   const { publicUrl, managerId } = repoInfo
-  const { id, videoUrl, text, thumbnailUrl, filename } = docInfo
+  const { id, videoUrl, text, thumbnailUrl, filename, title } = docInfo
 
   const issueTitle = encodeURIComponent(`
   영상 가이드(${id}) 관련 문의/제안 드립니다
@@ -123,7 +123,7 @@ const Guide: IStatelessPage<IGuideProps> = (props) => {
 
   return (
     <Page>
-      <Header />
+      <Header title={title}/>
       <Content>
         <Container>
           <VideoContainer>
