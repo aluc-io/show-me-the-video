@@ -1,11 +1,12 @@
 import * as React from 'react'
-import Link from 'next/link'
+// import Link from 'next/link'
 import { withRouter } from 'next/router'
 
 import styled from '../style/styled-component'
 import { IDocInfo } from 'global'
 import { layout as lo } from '../style/polished'
 import TimeAgo from 'react-timeago'
+import { Link } from '../routes'
 
 const Card = styled.div`
   cursor: pointer;
@@ -111,12 +112,14 @@ const SubInfo = styled.div`
   text-align: left;
 `
 
+
 const CardComponent: React.FunctionComponent<IDocInfo & {repoIdx: number}> = props => {
-  const { repoIdx, title, thumbnailUrl, id, createTime, author, duration } = props
+  const { repoIdx, title, thumbnailUrl, id: docId , createTime, author, duration } = props
   const ct = new Date(createTime)
   return (
     <Card>
-      <Link href={`/${repoIdx}/${id}`}>
+      <Link route='doc' params={{ repoIdx, docId }}>
+        <a>
         <LinkInner>
           <ImageWrapper className='image'>
             <Image src={thumbnailUrl}/>
@@ -134,6 +137,7 @@ const CardComponent: React.FunctionComponent<IDocInfo & {repoIdx: number}> = pro
             </Title>
           </InfoBox>
         </LinkInner>
+        </a>
       </Link>
     </Card>
   )
