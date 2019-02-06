@@ -22,4 +22,8 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
   border-image: initial;
   font: inherit;
 }
+
+body {
+  background-color: rgb(249, 249, 249);
+}
 `

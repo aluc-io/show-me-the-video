@@ -18,11 +18,11 @@ app.prepare().then(() => {
 
   server.use('/asset', express.static( path.join(__dirname,'..','asset')))
 
-  server.get('/:repoIdx/:guideId', (req,res) => {
+  server.get('/:repoIdx/:docId', (req,res) => {
     const repoIdx = req.param('repoIdx')
-    const guideId = req.param('guideId')
-    const query = { ...parse(req.url, true).query, guideId, repoIdx }
-    app.render(req,res,'/guide',query)
+    const docId = req.param('docId')
+    const query = { ...parse(req.url, true).query, docId, repoIdx }
+    app.render(req,res,'/doc',query)
   })
 
   server.get('/api/v1/:repoIdx/:docId', async (req,res) => {

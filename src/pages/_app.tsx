@@ -5,6 +5,8 @@ import { useShowLayout, useRepoInfoArr, useSiteInfo } from '../state'
 import { AppContext } from '../context'
 import { getRepoInfoArr, getSiteInfo } from '../core'
 import { GlobalStyle } from '../style/GlobalStyle'
+import theme from '../style/theme-light'
+import { ThemeProvider } from '../style/styled-component'
 import { ISiteInfo, IRepoInfo } from 'global';
 
 interface IAppProps extends DefaultAppIProps, AppProps {
@@ -20,11 +22,14 @@ const CustomApp = (props: IAppProps) => {
     ...useRepoInfoArr(repoInfoArr),
     ...useSiteInfo(siteInfo),
   }
+  const dynamicTheme = { ...theme, showLayout: value.showLayout }
   return (
     <AppContext.Provider value={value}>
       <GlobalStyle />
       <Container>
-        <Component {...pageProps}/>
+        <ThemeProvider theme={dynamicTheme}>
+          <Component {...pageProps}/>
+        </ThemeProvider>
       </Container>
     </AppContext.Provider>
   )
