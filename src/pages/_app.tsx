@@ -1,6 +1,9 @@
 import * as React from 'react'
 import App, { Container, NextAppContext, DefaultAppIProps, AppProps } from 'next/app'
 
+// 모든 page 에 css 가 추가되어 좋지 않지만 현재 아래 이슈로 이곳에 css 추가
+// https://github.com/zeit/next-plugins/issues/282
+import "video-react/dist/video-react.css"
 import { useShowLayout, useRepoInfoArr, useSiteInfo } from '../state'
 import { AppContext } from '../context'
 import { getRepoInfoArr, getSiteInfo } from '../core'

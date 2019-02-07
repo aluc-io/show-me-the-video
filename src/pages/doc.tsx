@@ -6,7 +6,6 @@ import { withRouter, SingletonRouter } from 'next/router'
 import styled from '../style/styled-component'
 import * as ReactMarkdown from 'react-markdown'
 import { Player, BigPlayButton, ControlBar, PlaybackRateMenuButton } from 'video-react'
-import "video-react/dist/video-react.css"
 import { AppContext } from '../context';
 import * as mime from 'mime-types'
 import Button from '@material-ui/core/Button'
