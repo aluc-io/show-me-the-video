@@ -1,10 +1,12 @@
 import * as React from 'react'
-import Link from 'next/link'
+// import Link from 'next/link'
+import { withRouter } from 'next/router'
 
 import styled from '../style/styled-component'
-import { ICommonStyledProps, IDocInfo } from 'global'
+import { IDocInfo } from 'global'
 import { layout as lo } from '../style/polished'
 import TimeAgo from 'react-timeago'
+import { Link } from '../routes'
 
 const Card = styled.div`
   cursor: pointer;
@@ -31,7 +33,7 @@ const ImageWrapper = styled.div`
   ${p => lo(p.theme.showLayout, "ImageWrapper", "rgba(205, 40, 0, 0.65)" )}
 `
 
-const LinkInner = styled.a`
+const LinkInner = styled.div`
   box-shadow: none;
   border-bottom: none;
   transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1) 0s;
@@ -39,7 +41,7 @@ const LinkInner = styled.a`
   ${p => lo(p.theme.showLayout, "LinkInner", "rgba(255, 200, 180, 0.51)" )}
 `
 
-const Image = styled.img<ICommonStyledProps>`
+const Image = styled.img`
   border-radius: 4px;
   position: absolute;
   top: 0px;
@@ -106,18 +108,18 @@ const Title = styled.div`
   }
 `
 
-const SubInfo = styled.div<ICommonStyledProps>`
+const SubInfo = styled.div`
   text-align: left;
 `
 
 
-
 const CardComponent: React.FunctionComponent<IDocInfo & {repoIdx: number}> = props => {
-  const { repoIdx, title, thumbnailUrl, id, createTime, author, duration } = props
+  const { repoIdx, title, thumbnailUrl, id: docId , createTime, author, duration } = props
   const ct = new Date(createTime)
   return (
     <Card>
-      <Link href={{ pathname: `/${repoIdx}/${id}` }}>
+      <Link route='doc' params={{ repoIdx, docId }}>
+        <a>
         <LinkInner>
           <ImageWrapper className='image'>
             <Image src={thumbnailUrl}/>
@@ -135,9 +137,10 @@ const CardComponent: React.FunctionComponent<IDocInfo & {repoIdx: number}> = pro
             </Title>
           </InfoBox>
         </LinkInner>
+        </a>
       </Link>
     </Card>
   )
 }
 
-export default CardComponent
+export default withRouter(CardComponent)

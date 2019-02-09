@@ -4,7 +4,7 @@ import * as express from 'express'
 import * as next from 'next'
 import { console } from 'tracer'
 
-import { getRepoInfoArr, getDocInfo } from './core'
+import { getRepoInfoArr, getDocInfo, getSiteInfo, getRepoInfo } from './core/server'
 
 const logger = console()
 
@@ -18,11 +18,32 @@ app.prepare().then(() => {
 
   server.use('/asset', express.static( path.join(__dirname,'..','asset')))
 
-  server.get('/:repoIdx/:docId', (req,res) => {
+  server.get('/doc/:repoIdx/:docId', (req,res) => {
     const repoIdx = req.param('repoIdx')
     const docId = req.param('docId')
+    logger.debug(req.query)
+    logger.debug(req.params)
     const query = { ...parse(req.url, true).query, docId, repoIdx }
     app.render(req,res,'/doc',query)
+  })
+
+  server.get('/api/v1/repoInfoArr', async (_,res) => {
+    logger.debug('get api call: /api/v1/repoInfoArr')
+    const videoInfoArr = await getRepoInfoArr()
+    res.json(videoInfoArr)
+  })
+
+  server.get('/api/v1/siteInfo', async (_,res) => {
+    logger.debug('get api call: /api/v1/siteInfo')
+    const siteInfo = getSiteInfo()
+    res.json(siteInfo)
+  })
+
+  server.get('/api/v1/:repoIdx', async (req,res) => {
+    const repoIdx = req.param('repoIdx')
+    logger.debug(`get api call: /api/v1/${repoIdx}`)
+    const guideInfo = await getRepoInfo(repoIdx)
+    res.json(guideInfo)
   })
 
   server.get('/api/v1/:repoIdx/:docId', async (req,res) => {
@@ -31,12 +52,6 @@ app.prepare().then(() => {
     logger.debug(`get api call: /api/v1/${repoIdx}/${docId}`)
     const guideInfo = await getDocInfo(repoIdx, docId)
     res.json(guideInfo)
-  })
-
-  server.get('/api/v1/repoInfoArr', async (_,res) => {
-    logger.debug('get api call: /api/v1/repoInfoArr')
-    const videoInfoArr = await getRepoInfoArr()
-    res.json(videoInfoArr)
   })
 
   server.get('*', (req,res) => {

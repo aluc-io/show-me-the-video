@@ -3,12 +3,12 @@ import axios from 'axios'
 import { find } from 'lodash'
 import { TGetDocInfo, TGetSiteInfo, TGetRepoInfo, TGetRepoInfoArr } from '../interface';
 
-export const getDocInfo: TGetDocInfo = async (repoIdx, id) => {
+export const getDocInfo: TGetDocInfo = async (repoIdx, docId) => {
   const repoInfo = await getRepoInfo(repoIdx)
-  const docInfo = find(repoInfo.docInfoArr, { id })
+  const docInfo = find(repoInfo.docInfoArr, { id: docId })
   if (docInfo) return docInfo
 
-  const [err,res] = await to( axios.get('/api/v1/guide/' + id))
+  const [err,res] = await to( axios.get(`/api/v1/${repoIdx}/${docId}`))
   if (err || !res) throw err
 
   return res.data
@@ -29,7 +29,7 @@ export const getRepoInfoArr: TGetRepoInfoArr = async () => {
 }
 
 export const getRepoInfo: TGetRepoInfo = async (repoIdx) => {
-  const [err,res] = await to( axios.get('/api/v1/repoInfo/' + repoIdx))
+  const [err,res] = await to( axios.get(`/api/v1/${repoIdx}`))
   if (err || !res) throw err
 
   return res.data

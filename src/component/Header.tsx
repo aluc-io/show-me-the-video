@@ -1,4 +1,5 @@
 import { withRouter, SingletonRouter } from 'next/router'
+import Link from 'next/link'
 import * as React from 'react'
 import { useContext } from 'react'
 import AppBar from '@material-ui/core/AppBar'
@@ -30,9 +31,11 @@ const Header: React.FunctionComponent<IHeaderProps> = (props) => {
     <Box>
       <AppBar position="static">
         <Toolbar>
-          <IconButton color="inherit" aria-label="Menu" href="/">
-            <HomeIcon />
-          </IconButton>
+          <Link href="/">
+            <IconButton color="inherit" aria-label="Menu">
+              <HomeIcon />
+            </IconButton>
+          </Link>
           <Typography variant="h6" color="inherit" style={{flexGrow: 1}}>{title}</Typography>
           <FormControlLabel
             control={<Switch checked={showLayout} onChange={toggleShowLayout} aria-label="layout"/>}
