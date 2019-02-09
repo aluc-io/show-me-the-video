@@ -1,7 +1,7 @@
 {
   "watch": ["src/**/*.ts"],
   "env": {
-    "IS_SERVER": "true",
+    "APPLICATION_CONFIG": "{}",
     "NODE_ENV": "development",
     "TS_NODE_IGNORE_DIAGNOSTICS": "6133"
   },

@@ -1,6 +1,6 @@
 import { TGetDocInfo, TGetSiteInfo, TGetRepoInfoArr, TGetRepoInfo } from './interface';
 
-const isServer: boolean = process.env.IS_SERVER === "true"
+const isServer = !! process.env.APPLICATION_CONFIG
 
 console.log(`isServer: ${isServer}`)
 interface ICoreCommon {

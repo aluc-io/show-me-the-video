@@ -4,7 +4,7 @@ import styled from '../style/styled-component'
 import { layout as lo } from '../style/polished'
 import { CONST_SMTV_GITHUB_URL } from '../core/constant';
 
-const isServer = process.env.IS_SERVER === 'true'
+const isServer = !! process.env.APPLICATION_CONFIG
 
 const Box = styled.div`
   position: fixed;

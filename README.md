@@ -126,6 +126,17 @@ $ docker run --rm -d -p8082:80 alucio/show-me-the-video-example
 ## Font
 - https://google-webfonts-helper.herokuapp.com
 
+## heroku deploy using container
+
+```sh
+$ export APPLICATION_CONFIG=$(node src/bin/yaml-to-json.js application.yml)
+$ heroku config:set APPLICATION_CONFIG=$APPLICATION_CONFIG
+$ heroku config:get APPLICATION_CONFIG
+$ heroku container:push web
+$ heroku container:release web
+$ heroku open
+```
+
 ## Contributing
 All pull requests are welcome.
 
