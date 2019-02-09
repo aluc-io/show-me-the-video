@@ -12,6 +12,8 @@ import theme from '../style/theme-light'
 import { ThemeProvider } from '../style/styled-component'
 import { ISiteInfo, IRepoInfo } from 'global';
 
+const isServer = !! process.env.APPLICATION_CONFIG
+
 interface IAppProps extends DefaultAppIProps, AppProps {
   repoInfoArr: Array<IRepoInfo>
   siteInfo: ISiteInfo
@@ -42,8 +44,9 @@ class CustomAppWrapper extends App<IAppProps> {
   static async getInitialProps({ Component, router, ctx }: NextAppContext) {
     let pageProps = {}
 
-    if (Component.getInitialProps) {
+    if (Component.getInitialProps && isServer) {
       pageProps = await Component.getInitialProps(ctx)
+      console.log(pageProps)
     }
 
     const repoInfoArr = await getRepoInfoArr()

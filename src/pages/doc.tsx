@@ -94,6 +94,7 @@ interface IGuideProps {
 }
 
 const Guide: IStatelessPage<IGuideProps> = (props) => {
+  console.log('doc.tsx render()')
   const { siteInfo } = useContext(AppContext)
   const { host } = siteInfo
   const { repoInfo, docInfo, router } = props
