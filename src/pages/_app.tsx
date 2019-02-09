@@ -52,6 +52,15 @@ class CustomAppWrapper extends App<IAppProps> {
     return { repoInfoArr, siteInfo, pageProps, router, showLayout }
   }
 
+  componentDidMount() {
+    console.log('componentDidMount')
+    const jssStyles = document.getElementById('jss-server-side');
+    if (jssStyles && jssStyles.parentNode) {
+      console.log('remove jss-server-side')
+      jssStyles.parentNode.removeChild(jssStyles);
+    }
+  }
+
   render() {
     // Splited function Component is needed,
     // because hooks can only be called inside the body of a function component.

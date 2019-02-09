@@ -2,25 +2,48 @@ import Document, { Head, Main, NextScript, NextDocumentContext } from 'next/docu
 import { ServerStyleSheet } from 'styled-components'
 import { ReactElement } from 'react';
 
+import JssProvider from 'react-jss/lib/JssProvider';
+import { MuiThemeProvider } from '@material-ui/core/styles';
+
+import { sheetsRegistry, theme, generateClassName, sheetsManager } from '../style/getContext'
+
 interface IDocumentProps {
   styleTags: ReactElement<{}>
+  materialUICss: string
 }
 
 export default class MyDocument extends Document<IDocumentProps> {
   static async getInitialProps({ renderPage }: NextDocumentContext) {
+    console.log('document getInitialProps')
     const sheet = new ServerStyleSheet()
+
     const page = renderPage( App => props => {
-      return sheet.collectStyles(<App {...props} />)
+      return sheet.collectStyles(
+        <JssProvider registry={sheetsRegistry} generateClassName={generateClassName}>
+          <MuiThemeProvider theme={theme} sheetsManager={sheetsManager}>
+          <App {...props} />
+          </MuiThemeProvider>
+        </JssProvider>
+      )
     })
+
+    const materialUICss = sheetsRegistry.toString()
     const styleTags = sheet.getStyleElement()
-    return { ...page, styleTags }
+    return { ...page, styleTags, materialUICss }
   }
 
   render() {
+    console.log('document render. this.props.materialUICss.length(): ' + this.props.materialUICss.length)
     return (
-      <html className="bp3-focus-disabled">
+      <html>
         <Head>
           {this.props.styleTags}
+          <style
+            id="jss-server-side"
+            dangerouslySetInnerHTML={{
+              __html: this.props.materialUICss,
+            }}
+          />
         </Head>
         <body>
           <Main />

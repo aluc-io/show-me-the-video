@@ -32,7 +32,7 @@ const Header: React.FunctionComponent<IHeaderProps> = (props) => {
       <AppBar position="static">
         <Toolbar>
           <Link href="/">
-            <IconButton color="inherit" aria-label="Menu">
+            <IconButton color="inherit">
               <HomeIcon />
             </IconButton>
           </Link>
