@@ -1,7 +1,6 @@
 import * as React from 'react'
-import { useContext } from 'react';
-import { isArray } from 'lodash'
-import { withRouter, SingletonRouter } from 'next/router'
+import { useContext, useState } from 'react';
+import { withRouter, SingletonRouter, DefaultQuery } from 'next/router'
 
 import styled from '../style/styled-component'
 import * as ReactMarkdown from 'react-markdown'
@@ -19,6 +18,7 @@ import { Footer } from '../component/Footer'
 import Page from '../component/Page'
 import { IStatelessPage, IDocInfo, IRepoInfo } from 'global';
 import { NextContext } from 'next';
+import { getFromQuery } from '../core/util';
 
 const Content = styled.div`
   margin-top: 20px;
@@ -94,12 +94,16 @@ interface IGuideProps {
 }
 
 const Guide: IStatelessPage<IGuideProps> = (props) => {
+  console.log('doc.tsx render()')
   const { siteInfo } = useContext(AppContext)
   const { host } = siteInfo
-  const { repoInfo, docInfo, router } = props
+  const { router } = props
+  const initialInfo = { repoInfo: props.repoInfo, docInfo: props.docInfo }
+  const { repoInfo, docInfo } = useInfo(router.query, initialInfo)
   if (!docInfo || !repoInfo) {
-    return <pre>{JSON.stringify(props,null,2)}</pre>
+    return <pre>...loading</pre>
   }
+
   const { publicUrl, managerId } = repoInfo
   const { id, videoUrl, text, thumbnailUrl, filename, title } = docInfo
 
@@ -170,17 +174,28 @@ const Guide: IStatelessPage<IGuideProps> = (props) => {
 }
 
 Guide.getInitialProps = async (ctx: NextContext) => {
-  let repoIdx = ctx.query.repoIdx
-  let docId = ctx.query.docId
-  if (!repoIdx || !docId) {
-    throw new Error('SMTV_ERROR_3981')
-  }
-  if (isArray(repoIdx)) repoIdx = repoIdx[0]
-  if (isArray(docId)) docId = docId[0]
-
-  console.debug(`Guide.getInitialProps(repoIdx: ${repoIdx}, docId: ${docId})`)
+  const repoIdx = getFromQuery(ctx.query, 'repoIdx')
+  const docId = getFromQuery(ctx.query, 'docId')
   const docInfo = await getDocInfo(repoIdx, docId)
   const repoInfo = await getRepoInfo(repoIdx)
+  return { repoInfo, docInfo }
+}
+
+interface IPageLazyData {
+  // 클라이언트에서는 먼저 페이지를 보여주고 데이터를 나중에 로딩하기 위해
+  repoInfo: IRepoInfo
+  docInfo: IDocInfo
+}
+const useInfo = (query: DefaultQuery | undefined, info: IPageLazyData) => {
+  // componentDidMount 하기 싫어서
+  const [repoInfo, setRepoInfo] = useState<IRepoInfo>(info.repoInfo)
+  const [docInfo, setDocInfo] = useState<IDocInfo>(info.docInfo)
+  if (!repoInfo || !docInfo) {
+    const repoIdx = getFromQuery(query, 'repoIdx')
+    const docId = getFromQuery(query, 'docId')
+    getDocInfo(repoIdx, docId).then( setDocInfo )
+    getRepoInfo(repoIdx).then( setRepoInfo )
+  }
   return { repoInfo, docInfo }
 }
 

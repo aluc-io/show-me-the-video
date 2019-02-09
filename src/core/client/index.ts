@@ -1,13 +1,8 @@
 import to from 'await-to-js'
 import axios from 'axios'
-import { find } from 'lodash'
 import { TGetDocInfo, TGetSiteInfo, TGetRepoInfo, TGetRepoInfoArr } from '../interface';
 
 export const getDocInfo: TGetDocInfo = async (repoIdx, docId) => {
-  const repoInfo = await getRepoInfo(repoIdx)
-  const docInfo = find(repoInfo.docInfoArr, { id: docId })
-  if (docInfo) return docInfo
-
   const [err,res] = await to( axios.get(`/api/v1/${repoIdx}/${docId}`))
   if (err || !res) throw err
 
