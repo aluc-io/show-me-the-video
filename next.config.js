@@ -8,6 +8,10 @@ let customConfig = {
 
     const { IgnorePlugin } = webpack
     config.plugins.push(new IgnorePlugin(/\.\/server$/))
+    config.plugins.push(new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+      'process.env.SMTV_VERSION': JSON.stringify(process.env.SMTV_VERSION || 'local'),
+    }))
 
     config.watchOptions = {
       ignored: [

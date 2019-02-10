@@ -50,7 +50,7 @@ class CustomAppWrapper extends App<IAppProps> {
 
     const repoInfoArr = await getRepoInfoArr()
     const siteInfo = await getSiteInfo()
-    const showLayout = true
+    const showLayout = theme.showLayout
     return { repoInfoArr, siteInfo, pageProps, router, showLayout }
   }
 

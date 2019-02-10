@@ -3,6 +3,7 @@
   "env": {
     "APPLICATION_CONFIG": "{}",
     "NODE_ENV": "development",
+    "SMTV_VERSION": "local",
     "TS_NODE_IGNORE_DIAGNOSTICS": "6133"
   },
   "exec": "ts-node --project tsconfig.server.json src/server.ts"

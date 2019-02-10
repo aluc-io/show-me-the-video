@@ -21,17 +21,18 @@ Example:
 # application.yml
 title: smtv example youtube
 host: smtv.aluc.io
+youtubeAPIKey: AIxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxFg
 backendRepos:
-  - type: GITLAB
+  - type: GITHUB
     cloneUrl: https://github.com/aluc-io/show-me-the-video-example.git
     publicUrl: https://github.com/aluc-io/show-me-the-video-example
     docDirectory: show-me-the-video
     title: IntelliJ IDEA Guide
     managerId: alfreduc23
-  - type: GITLAB
+  - type: GITHUB
     cloneUrl: https://github.com/aluc-io/show-me-the-video-example.git
     publicUrl: https://github.com/aluc-io/show-me-the-video-example
-    docDirectory: show-me-the-video
+    docDirectory: show-me-the-video-youtube
     title: Eclipse Guide
     managerId: alfreduc23
 ```
@@ -79,8 +80,6 @@ $ heroku config:get APPLICATION_CONFIG
 [updateTime]: null
 
 # Title
-
-## Sub title (optional)
 
 [![video][thumbnailUrl]][videoUrl]
 
@@ -132,7 +131,7 @@ $ docker run --rm -d -p8082:80 alucio/show-me-the-video-example
 $ export APPLICATION_CONFIG=$(node src/bin/yaml-to-json.js application.yml)
 $ heroku config:set APPLICATION_CONFIG=$APPLICATION_CONFIG
 $ heroku config:get APPLICATION_CONFIG
-$ heroku container:push web
+$ heroku container:push web --arg SMTV_VERSION=$(git describe)
 $ heroku container:release web
 $ heroku open
 ```

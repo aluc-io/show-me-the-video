@@ -24,6 +24,13 @@ const Box = styled.div`
   }
 `
 
+const Version = styled.div`
+  left: 4px;
+  bottom: 4px;
+  position: absolute;
+  color: darkgray;
+`
+
 export const Footer = () => {
   const restHeight = useRestHeight()
   const opacity = (100 - restHeight) * 0.01
@@ -35,6 +42,7 @@ export const Footer = () => {
         <span>© 2019 alfreduc23. powered by </span>
         <a href={CONST_SMTV_GITHUB_URL}>show-me-the-video</a>
       </h1>
+      <Version>{process.env.SMTV_VERSION}</Version>
     </Box>
   )
 }
