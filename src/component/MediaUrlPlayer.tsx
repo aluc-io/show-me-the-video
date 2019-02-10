@@ -8,6 +8,6 @@ export const MediaUrlPlayer = ({ videoUrl, thumbnailUrl }: IProps) =>
   <Player src={videoUrl} poster={thumbnailUrl} playsInline >
     <BigPlayButton position="center" />
     <ControlBar>
-      <PlaybackRateMenuButton rates={[5, 2, 1, 0.5, 0.1]} />
+      <PlaybackRateMenuButton rates={[0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2]} />
     </ControlBar>
   </Player>

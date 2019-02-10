@@ -47,6 +47,7 @@ interface IRepoInfo {
   publicUrl: string
   title: string
   managerId: string
+  docDirectory: string
   docInfoArr: Array<IDocInfo>
 }
 

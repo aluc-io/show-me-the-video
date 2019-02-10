@@ -1,8 +1,5 @@
 import * as React from 'react'
-// import Link from 'next/link'
-import { withRouter } from 'next/router'
 import TimeAgo from 'react-timeago'
-
 import styled from '../style/styled-component'
 import { IDocInfo } from 'global'
 import { layout as lo } from '../style/polished'
@@ -117,13 +114,12 @@ const SubInfo = styled.div`
   text-align: left;
 `
 
-
 const CardComponent: React.FunctionComponent<IDocInfo & {repoIdx: number}> = props => {
   const { repoIdx, title, thumbnailUrl, id: docId , createTime, author, duration } = props
   const ct = new Date(createTime)
   return (
     <Card>
-      <Link scroll={true} route='doc' params={{ repoIdx, docId }}>
+      <Link prefetch route='doc' params={{ repoIdx, docId }}>
         <LinkInner>
           <ImageWrapper className='image'>
             <Image src={thumbnailUrl}/>
@@ -146,4 +142,4 @@ const CardComponent: React.FunctionComponent<IDocInfo & {repoIdx: number}> = pro
   )
 }
 
-export default withRouter(CardComponent)
+export default CardComponent

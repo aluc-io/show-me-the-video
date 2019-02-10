@@ -31,7 +31,7 @@ const Header: React.FunctionComponent<IHeaderProps> = (props) => {
     <Box>
       <AppBar position="static">
         <Toolbar>
-          <Link href="/">
+          <Link prefetch href="/">
             <IconButton color="inherit">
               <HomeIcon />
             </IconButton>

@@ -3,7 +3,7 @@ import IThemeInterface from './theme'
 const theme: IThemeInterface = {
   primaryColor: 'red',
   primaryColorInverted: 'orange',
-  showLayout: true,
+  showLayout: process.env.NODE_ENV !== 'production',
   cardWidth: 256,
 }
 

@@ -16,6 +16,7 @@ const getRepoInfoArr: TGetRepoInfoArr = async () => {
       title: repo.title,
       publicUrl: repo.publicUrl,
       managerId: repo.managerId,
+      docDirectory: repo.docDirectory,
       docInfoArr: docInfoArrArr[i],
     }
     return repoInfo
@@ -32,6 +33,7 @@ const getSiteInfo: TGetSiteInfo = () => {
 }
 
 export const getDocInfo: TGetDocInfo = async (repoIdx, id) => {
+  console.log('getDocInfo()', repoIdx, id)
   const repoInfo = await getRepoInfo(repoIdx)
   const docInfo = find(repoInfo.docInfoArr, { id })
   if (!docInfo) throw new Error('SMTV_ERROR_58211_NO_DOC_INFO')

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useContext, useState } from 'react';
-import { withRouter, SingletonRouter, DefaultQuery } from 'next/router'
+import { DefaultQuery, withRouter, WithRouterProps } from 'next/router'
 import * as ReactMarkdown from 'react-markdown'
 import * as mime from 'mime-types'
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
@@ -9,7 +9,6 @@ import Button from '@material-ui/core/Button'
 import { IStatelessPage, IDocInfo, IRepoInfo } from 'global';
 import styled from '../style/styled-component'
 import { AppContext } from '../context';
-import { CONST_DOC_DIRECTORY } from '../core/constant'
 import markdownCss from '../markdownCss'
 import { getDocInfo, getRepoInfo } from '../core'
 import Header from '../component/Header'
@@ -85,11 +84,10 @@ const customRenderers: ReactMarkdown.Renderers = {
   },
 }
 
-interface IGuideProps {
+interface IGuideProps extends WithRouterProps {
   repoIdx: number
   docInfo: IDocInfo
   repoInfo: IRepoInfo
-  router: SingletonRouter
 }
 
 const Guide: IStatelessPage<IGuideProps> = (props) => {
@@ -97,30 +95,32 @@ const Guide: IStatelessPage<IGuideProps> = (props) => {
   const { siteInfo } = useContext(AppContext)
   const { host } = siteInfo
   const { router } = props
+  if (!router) throw new Error('SMTV_ERROR_98531')
+
   const initialInfo = { repoInfo: props.repoInfo, docInfo: props.docInfo }
   const { repoInfo, docInfo } = useInfo(router.query, initialInfo)
   if (!docInfo || !repoInfo) {
     return <pre>...loading</pre>
   }
 
-  const { publicUrl, managerId } = repoInfo
+  const { publicUrl, managerId, docDirectory } = repoInfo
   const { id, videoUrl, text, thumbnailUrl, filename, title, type } = docInfo
 
   const issueTitle = encodeURIComponent(`
-  영상 가이드(${id}) 관련 문의/제안 드립니다
+영상 가이드(${id}) 관련 문의/제안 드립니다
   `.trim())
-    const issueDescription = encodeURIComponent(`
-  # 질문 있어요 / 제안 합니다
-  
-  - 보고 있던 동영상 주소: https://${host}/${router.asPath}
-  - 급함 정도: 매우 급함 / 급함 / 보통 / 안급함 / 매우 안급함
-  - 내용:
-  
-  \`\`\`
-  <여기에 작성해주세요>
-  \`\`\`
-  
-  /assign @${managerId}
+  const issueDescription = encodeURIComponent(`
+# 질문 있어요 / 제안 합니다
+
+- 보고 있던 동영상 주소: https://${host}/${router.asPath}
+- 급함 정도: 매우 급함 / 급함 / 보통 / 안급함 / 매우 안급함
+- 내용:
+
+\`\`\`
+<여기에 작성해주세요>
+\`\`\`
+
+/assign @${managerId}
   `.trim())
 
   return (
@@ -154,7 +154,7 @@ const Guide: IStatelessPage<IGuideProps> = (props) => {
               size='large'
               fullWidth={true}
               variant="outlined"
-              href={`${publicUrl}/edit/master/${CONST_DOC_DIRECTORY}/${filename}`}
+              href={`${publicUrl}/edit/master/${docDirectory}/${filename}`}
               target="_blank"
             >
               <CloudUploadIcon style={leftIcon}/>
@@ -169,6 +169,7 @@ const Guide: IStatelessPage<IGuideProps> = (props) => {
 }
 
 Guide.getInitialProps = async (ctx: NextContext) => {
+  console.log('Guide.getInitialProps')
   const repoIdx = getFromQuery(ctx.query, 'repoIdx')
   const docId = getFromQuery(ctx.query, 'docId')
   const docInfo = await getDocInfo(repoIdx, docId)
@@ -183,15 +184,19 @@ interface IPageLazyData {
 }
 const useInfo = (query: DefaultQuery | undefined, info: IPageLazyData) => {
   // componentDidMount 하기 싫어서
-  const [repoInfo, setRepoInfo] = useState<IRepoInfo>(info.repoInfo)
-  const [docInfo, setDocInfo] = useState<IDocInfo>(info.docInfo)
-  if (!repoInfo || !docInfo) {
+  const [lazyInfo, setLazyInfo] = useState<IPageLazyData>(info)
+  if (!lazyInfo.repoInfo || !lazyInfo.docInfo) {
     const repoIdx = getFromQuery(query, 'repoIdx')
     const docId = getFromQuery(query, 'docId')
-    getDocInfo(repoIdx, docId).then( setDocInfo )
-    getRepoInfo(repoIdx).then( setRepoInfo )
+    console.log('fetch repoInfo, docInfo with', repoIdx, docId)
+    Promise.all([ getDocInfo(repoIdx, docId), getRepoInfo(repoIdx) ])
+      .then(([docInfo, repoInfo]) => {
+        // 정보가 없는데 setLazyInfo 를 부르면 무한 루프에 빠질 수 있음
+        if (!docInfo || !repoInfo) throw new Error('SMTV_ERROR_12513')
+        setLazyInfo({ repoInfo, docInfo })
+      })
   }
-  return { repoInfo, docInfo }
+  return lazyInfo
 }
 
 export default withRouter(Guide)
