@@ -1,11 +1,11 @@
 import * as React from 'react'
 // import Link from 'next/link'
 import { withRouter } from 'next/router'
+import TimeAgo from 'react-timeago'
 
 import styled from '../style/styled-component'
 import { IDocInfo } from 'global'
 import { layout as lo } from '../style/polished'
-import TimeAgo from 'react-timeago'
 import { Link } from '../routes'
 
 const Card = styled.div`
@@ -105,6 +105,11 @@ const Title = styled.div`
     font-rendering: optimizeLegibility;
     font-family: Roboto, 'Nanum Gothic Coding';
     white-space: pre-line;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    overflow: hidden;
   }
 `
 
@@ -118,8 +123,7 @@ const CardComponent: React.FunctionComponent<IDocInfo & {repoIdx: number}> = pro
   const ct = new Date(createTime)
   return (
     <Card>
-      <Link route='doc' params={{ repoIdx, docId }}>
-        <a>
+      <Link scroll={true} route='doc' params={{ repoIdx, docId }}>
         <LinkInner>
           <ImageWrapper className='image'>
             <Image src={thumbnailUrl}/>
@@ -137,7 +141,6 @@ const CardComponent: React.FunctionComponent<IDocInfo & {repoIdx: number}> = pro
             </Title>
           </InfoBox>
         </LinkInner>
-        </a>
       </Link>
     </Card>
   )

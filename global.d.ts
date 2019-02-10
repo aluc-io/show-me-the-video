@@ -17,21 +17,28 @@ interface ICommonStyledProps {
   showLayout?: boolean
 }
 
-interface IDocInfo {
+interface IYoutubeDocInfo {
   title: string
-  subTitle: string
-  videoUrl: string
   thumbnailUrl: string
   tagArr: Array<string>
-  prev: string
-  next: string
   author: string
   createTime: string
-  updateTime: string
   duration: string
+}
+
+interface IMarkdownDocInfo extends IYoutubeDocInfo {
+  updateTime?: string
+  isDraft?: boolean
+  prev?: string
+  next?: string
+}
+
+interface IDocInfo extends IMarkdownDocInfo {
   id: string
   filename: string
   text: string
+  videoUrl: string
+  type: 'MEDIA_URL' | 'YOUTUBE'
 }
 
 interface IRepoInfo {
@@ -49,6 +56,7 @@ interface ISiteInfo {
 }
 
 interface IApplicationConfig extends ISiteInfo {
+  youtubeAPIKey: string
   backendRepos: Array<{
     type: string
     cloneUrl: string

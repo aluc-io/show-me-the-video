@@ -1,13 +1,12 @@
 import * as path from "path"
-import * as git from 'simple-git/promise'
+import * as git from "simple-git/promise"
 
 import to from 'await-to-js'
 import { promises } from 'fs'
 
-import { compact, filter, reject as lodashReject, find, findIndex, last, get } from 'lodash'
+import { filter, reject as lodashReject, last, omitBy } from 'lodash'
 
 import * as marked from 'marked'
-import { Token, Tokens } from 'marked'
 import * as md5 from 'md5'
 import * as readdirEnhanced from 'readdir-enhanced'
 import * as tracer from 'tracer'
@@ -18,6 +17,9 @@ import * as memoizee from 'memoizee'
 import config from './config'
 import { IDocInfo } from "global";
 import { TGetDocInfoArr } from "../interface";
+
+import { getDocInfo as getDocInfoFromYoutube, getEmptyDocInfo as getEmptyDocInfoFromYoutube } from './backendYoutube'
+import { getDocInfo as getDocInfoFromMarkdown } from './backendMarkdown'
 
 const fs = promises
 const logger = tracer.console()
@@ -71,7 +73,7 @@ const _getRepoPath = async (repoUrl: string) => {
 
 const getRepoPath = memoizee(_getRepoPath, { maxAge: 5 * 60 * 1000 })
 
-const getVideoGuideHereFileArr = (repoPath: string, docDirectory: string) => {
+const getMarkdownFilenameArr = (repoPath: string, docDirectory: string) => {
   const dirPath = path.resolve(repoPath, docDirectory)
   let fileArr = readdirEnhanced.sync(dirPath)
   fileArr = lodashReject(fileArr, name => name === 'README.md')
@@ -82,54 +84,41 @@ const getVideoGuideHereFileArr = (repoPath: string, docDirectory: string) => {
 
 const readFile = async (absolutePath: string) => {
   const text = await fs.readFile( absolutePath, 'utf8')
-  return { filename: path.basename(absolutePath), text }
-}
-
-interface IFilenameText {
-  filename: string
-  text: string
+  return text
 }
 
 const emptyLink = { href: "", title: "" }
 // const emptyHeading: Tokens.Heading = { type: 'heading', depth: -1, text: "" }
 
-const parseVideoInfo: (info: IFilenameText) => IDocInfo | null = ({ filename, text }) => {
+type TParseDocInfo = (filename: string, text: string) => Promise<IDocInfo>
+const parseVideoInfo: TParseDocInfo  = async (filename, text) => {
   const tokenArr = marked.lexer(text)
-  const firstHeading = find(tokenArr, (t: Token): t is Tokens.Heading => t.type === 'heading' && t.depth === 1)
-  // const title = firstHeading ? firstHeading.text : "[Untitle]"
-  const title = firstHeading ? firstHeading.text : "[Untitle]"
 
-  const titleIndex = findIndex( tokenArr, firstHeading )
+  // https://stackoverflow.com/questions/19377262/regex-for-youtube-url
+  const ytMatcher = /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/
+  const videoUrl = (tokenArr.links.videourl || emptyLink).href
+  const matched = videoUrl.match(ytMatcher)
+  const emptyYoutubeInfo = getEmptyDocInfoFromYoutube()
+  let infoFromYoutube = emptyYoutubeInfo
+  if (matched) infoFromYoutube = await getDocInfoFromYoutube(matched[5])
 
-  const subTitleToken = get<Token | void>(tokenArr, titleIndex+1)
-  const subTitle = subTitleToken && subTitleToken.type == 'heading' && subTitleToken.depth == 2
-      ? subTitleToken.text : '';
+  const infoFromMarkdown = getDocInfoFromMarkdown(tokenArr)
+  const ommitedMarkdownInfo = omitBy(infoFromMarkdown, item => ! item)
+  const ommitedYoutubeInfo = omitBy(infoFromYoutube, item => ! item)
 
-  const isDraft = (tokenArr.links.draft || { href: "false" }).href === 'true'
-  if (isDraft) return null
-
-  let createTime = (tokenArr.links.createtime || emptyLink).href
-  createTime = createTime ? createTime.replace(/-/g,' ') : createTime
-
-  let updateTime = (tokenArr.links.updatetime || emptyLink).href
-  updateTime = updateTime ? updateTime.replace(/-/g,' ') : updateTime
+  if(!ommitedMarkdownInfo.title && ommitedYoutubeInfo.title) {
+    text = `# ${ommitedYoutubeInfo.title}\n\n${text}`
+  }
 
   return {
-    // links 에 걸린 키는 다 소문자로 변환됨
-    title,
-    subTitle,
-    videoUrl: (tokenArr.links.videourl || emptyLink).href,
-    thumbnailUrl: (tokenArr.links.thumbnailurl || emptyLink).href,
-    tagArr: (tokenArr.links.tags || emptyLink).href.split(','),
-    prev: (tokenArr.links.prev || emptyLink).href,
-    next: (tokenArr.links.next || emptyLink).href,
-    author: (tokenArr.links.author || emptyLink).href,
-    createTime,
-    updateTime,
-    duration: (tokenArr.links.duration || emptyLink).href,
+    ...emptyYoutubeInfo,
+    ...ommitedYoutubeInfo,
+    ...ommitedMarkdownInfo,
+    videoUrl,
     id: md5(filename).substr(0,8),
     filename: filename,
-    text: text,
+    text,
+    type: infoFromYoutube.title ? 'YOUTUBE' : 'MEDIA_URL',
   }
 }
 
@@ -142,13 +131,13 @@ export const getDocInfoArr: TGetDocInfoArr = async (repoIdx) => {
   const [err] = await to( getRepoPath(cloneUrl))
   if (err) throw err
 
-  const fileArr = getVideoGuideHereFileArr(repoPath, docDirectory)
-  const promiseArr = fileArr.map(readFile)
-  const filenameTextArr = await Promise.all(promiseArr)
-  const docInfoArr = compact(filenameTextArr.map(parseVideoInfo))
+  const filenameArr = getMarkdownFilenameArr(repoPath, docDirectory)
+  const promiseArr = filenameArr.map( async f => {
+    const text = await readFile(f)
+    const baseFilename = path.basename(f)
+    const docInfo = await parseVideoInfo(baseFilename,text)
+    return docInfo
+  })
+  const docInfoArr = await Promise.all(promiseArr)
   return docInfoArr
-}
-
-export default {
-  getDocInfoArr,
 }
