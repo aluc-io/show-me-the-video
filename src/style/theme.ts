@@ -3,4 +3,5 @@ export default interface IThemeInterface {
   primaryColorInverted: string
   showLayout: boolean
   cardWidth: number
+  headerHeight: number
 }

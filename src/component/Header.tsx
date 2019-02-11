@@ -4,10 +4,10 @@ import * as React from 'react'
 import { useContext } from 'react'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
+
 import Typography from '@material-ui/core/Typography'
 import IconButton from '@material-ui/core/IconButton'
 import Switch from '@material-ui/core/Switch'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
 import HomeIcon from '@material-ui/icons/Home'
 
 import styled from '../style/styled-component'
@@ -23,25 +23,27 @@ interface IHeaderProps {
   title?: string
 }
 
+const StyledToolbar = styled((props) => (
+  <Toolbar {...props} />
+))`
+  min-height: ${p => p.theme.headerHeight}px !important;
+`
+
 const Header: React.FunctionComponent<IHeaderProps> = (props) => {
   const { showLayout, toggleShowLayout, siteInfo } = useContext(AppContext)
   const title = props.title || siteInfo.title
-
   return (
     <Box>
-      <AppBar position="static">
-        <Toolbar>
+      <AppBar position='static'>
+        <StyledToolbar>
           <Link prefetch href="/">
             <IconButton color="inherit">
               <HomeIcon />
             </IconButton>
           </Link>
-          <Typography variant="h6" color="inherit" style={{flexGrow: 1}}>{title}</Typography>
-          <FormControlLabel
-            control={<Switch checked={showLayout} onChange={toggleShowLayout} aria-label="layout"/>}
-            label={'layout'}
-          />
-        </Toolbar>
+          <Typography variant="subtitle1" color="inherit" style={{flexGrow: 1}} noWrap>{title}</Typography>
+          <Switch checked={showLayout} onChange={toggleShowLayout} aria-label="layout"/>
+        </StyledToolbar>
       </AppBar>
     </Box>
   )

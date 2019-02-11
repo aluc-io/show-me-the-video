@@ -1,6 +1,7 @@
 import * as React from 'react'
 import TimeAgo from 'react-timeago'
 import styled from '../style/styled-component'
+import media from '../style/media'
 import { IDocInfo } from 'global'
 import { layout as lo } from '../style/polished'
 import { Link } from '../routes'
@@ -9,6 +10,8 @@ const Card = styled.div`
   cursor: pointer;
   margin: .6em 0px;
   width: ${p => p.theme.cardWidth}px;
+  @media ${media.xs} { width: 100%; }
+
   ${p => lo(p.theme.showLayout, "Card", "rgba(133, 233, 133, 0.65)" )}
   &:hover .info {
     text-decoration: underline;
@@ -20,17 +23,22 @@ const Card = styled.div`
 `
 
 const ImageWrapper = styled.div`
-  height: 152px;
+  padding-bottom: 56.25%;
   position: relative;
   overflow: hidden;
   box-shadow: rgba(102, 51, 153, 0.1) 0px 4px 10px;
-  margin-bottom: 0.525rem;
   border-radius: 4px;
   transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1) 0s;
+  flex-shrink: 0;
+  -webkit-box-pack: center;
+  justify-content: center;
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
   ${p => lo(p.theme.showLayout, "ImageWrapper", "rgba(205, 40, 0, 0.65)" )}
 `
 
-const LinkInner = styled.div`
+const LinkInner = styled.a`
   box-shadow: none;
   border-bottom: none;
   transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1) 0s;
@@ -39,7 +47,6 @@ const LinkInner = styled.div`
 `
 
 const Image = styled.img`
-  border-radius: 4px;
   position: absolute;
   top: 0px;
   left: 0px;

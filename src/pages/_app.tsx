@@ -11,6 +11,7 @@ import { GlobalStyle } from '../style/GlobalStyle'
 import theme from '../style/theme-light'
 import { ThemeProvider } from '../style/styled-component'
 import { ISiteInfo, IRepoInfo } from 'global';
+import IThemeInterface from 'src/style/theme';
 
 const isServer = !! process.env.APPLICATION_CONFIG
 
@@ -18,14 +19,16 @@ interface IAppProps extends DefaultAppIProps, AppProps {
   repoInfoArr: Array<IRepoInfo>
   siteInfo: ISiteInfo
   showLayout: boolean
+  theme: IThemeInterface
 }
 
 const CustomApp = (props: IAppProps) => {
-  const { Component, pageProps, repoInfoArr, siteInfo, showLayout } = props
+  const { Component, pageProps, repoInfoArr, siteInfo, showLayout, theme } = props
   const value = { 
     ...useShowLayout(showLayout),
     ...useRepoInfoArr(repoInfoArr),
     ...useSiteInfo(siteInfo),
+    theme,
   }
   const dynamicTheme = { ...theme, showLayout: value.showLayout }
   return (
@@ -51,7 +54,7 @@ class CustomAppWrapper extends App<IAppProps> {
     const repoInfoArr = await getRepoInfoArr()
     const siteInfo = await getSiteInfo()
     const showLayout = theme.showLayout
-    return { repoInfoArr, siteInfo, pageProps, router, showLayout }
+    return { repoInfoArr, siteInfo, pageProps, router, showLayout, theme }
   }
 
   componentDidMount() {

@@ -1,5 +1,7 @@
 import { createContext } from 'react'
-import { IRepoInfo, ISiteInfo } from 'global';
+import { IRepoInfo, ISiteInfo } from 'global'
+import IThemeInterface from '../style/theme'
+import theme from '../style/theme-light'
 
 interface IAppContext {
   showLayout: boolean
@@ -8,6 +10,7 @@ interface IAppContext {
   setSiteInfo: (siteInfo: ISiteInfo) => void
   repoInfoArr: Array<IRepoInfo>
   setRepoInfoArr: (repoArr: Array<IRepoInfo>) => void
+  theme: IThemeInterface
 }
 
 export const AppContext = createContext<IAppContext>({
@@ -17,4 +20,5 @@ export const AppContext = createContext<IAppContext>({
   setSiteInfo: () => {},
   repoInfoArr: [],
   setRepoInfoArr: () => {},
+  theme: theme,
 })

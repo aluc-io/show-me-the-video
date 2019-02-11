@@ -4,6 +4,7 @@ import { DefaultQuery, withRouter, WithRouterProps } from 'next/router'
 import * as ReactMarkdown from 'react-markdown'
 import * as mime from 'mime-types'
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import { NextContext } from 'next';
 import Button from '@material-ui/core/Button'
 
 import { IStatelessPage, IDocInfo, IRepoInfo } from 'global';
@@ -14,18 +15,26 @@ import { getDocInfo, getRepoInfo } from '../core'
 import Header from '../component/Header'
 import { Footer } from '../component/Footer'
 import Page from '../component/Page'
-import { NextContext } from 'next';
+import media from '../style/media'
 import { getFromQuery } from '../core/util';
-import { MediaUrlPlayer } from '../component/MediaUrlPlayer';
 import { VideoPlayer } from '../component/VideoPlayer';
 
 const Content = styled.div`
   margin-top: 20px;
+  @media ${media.xs} { margin-top: 0px; }
   margin-bottom: 60px;
   flex: 1 1 0%;
   box-sizing: border-box;
 `
-const Container = styled.div`
+const Container1 = styled.div`
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 960px;
+  padding: 0px 20px;
+  @media ${media.xs} { padding: 0px 0px; }
+`
+
+const Container2 = styled.div`
   margin-left: auto;
   margin-right: auto;
   max-width: 960px;
@@ -43,24 +52,6 @@ const ButtonGrid = styled.div`
   align-items: center;
   height: 4em;
   grid-column-gap: .4em;
-`
-
-const VideoContainer = styled.div`
-  position: relative;
-  padding-bottom: 56.25%;
-  height: 0px;
-`
-
-const VideoFrame = styled.div`
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  width: 100%;
-  height: 100%;
-
-  & div:focus {
-    outline: none;
-  }
 `
 
 const leftIcon = {
@@ -127,13 +118,10 @@ const Guide: IStatelessPage<IGuideProps> = (props) => {
     <Page>
       <Header title={title}/>
       <Content>
-        <Container>
-          <VideoContainer>
-            <VideoFrame>
-              { type === 'MEDIA_URL' && <MediaUrlPlayer videoUrl={videoUrl} thumbnailUrl={thumbnailUrl}/>}
-              { type === 'YOUTUBE' && <VideoPlayer videoUrl={videoUrl}/>}
-            </VideoFrame>
-          </VideoContainer>
+        <Container1>
+          <VideoPlayer videoUrl={videoUrl} thumbnailUrl={thumbnailUrl} type={type}/>
+        </Container1>
+        <Container2>
           <MarkdownStyle>
             <ReactMarkdown source={text} renderers={customRenderers}/>
           </MarkdownStyle>
@@ -144,7 +132,6 @@ const Guide: IStatelessPage<IGuideProps> = (props) => {
               fullWidth={true}
               variant="outlined"
               href={`${publicUrl}/issues/new?issue[title]=${issueTitle}&issue[description]=${issueDescription}`}
-              target="_blank"
             >
               <CloudUploadIcon style={leftIcon}/>
               질문/제안
@@ -155,13 +142,12 @@ const Guide: IStatelessPage<IGuideProps> = (props) => {
               fullWidth={true}
               variant="outlined"
               href={`${publicUrl}/edit/master/${docDirectory}/${filename}`}
-              target="_blank"
             >
               <CloudUploadIcon style={leftIcon}/>
               편집
             </Button>
           </ButtonGrid>
-        </Container>
+        </Container2>
       </Content>
       <Footer />
     </Page>

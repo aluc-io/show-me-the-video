@@ -30,6 +30,7 @@ const GridTitle = styled(Grid)`
 const Title = styled.div`
   /* Card 의 width 와 sync 되어야 왼쪽 줄이 맞음 */
   width: ${p => p.theme.cardWidth}px;
+  @media ${media.xs} { width: 100%; }
   align-self: center;
   font-weight: 700;
   white-space: pre;
