@@ -12,8 +12,8 @@ WORKDIR /root/app
 
 ARG SMTV_VERSION
 RUN yarn
-ENV NODE_ENV=production
-ENV SMTV_VERSION=$SMTV_VERSION
+RUN export SMTV_VERSION=$SMTV_VERSION \
+  && export NODE_ENV=production
 RUN yarn build
 
 RUN apk update && apk add git jq
