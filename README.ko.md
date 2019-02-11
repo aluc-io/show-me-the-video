@@ -1,4 +1,10 @@
 # show-me-the-video (SMTV)
+
+[![Docker Pulls](https://img.shields.io/docker/pulls/alucio/show-me-the-video.svg)][dockerurl]
+[![Docker Layers](https://img.shields.io/microbadger/layers/alucio/show-me-the-video.svg)][dockerurl]
+[![Docker Size](https://img.shields.io/microbadger/image-size/alucio/show-me-the-video.svg)][dockerurl]
+[![Heroku deploy](https://heroku-badge.herokuapp.com/?app=show-me-the-video&style=flat&svg=1)][heroku]
+
 SMTV 는 비디오 콘텐츠을 포함한 **Markdown 문서**를 파싱하여 YouTube를 닮은
 비디오 클립 웹페이지를 생성해주는 프로젝트. github, gitlab 과 같은 어떤 git
 저장소도 **백엔드 저장소**로 사용 할 수 있음.
@@ -149,4 +155,6 @@ Released under The MIT License.
 
 [smtv_example]: https://github.com/aluc-io/show-me-the-video-example
 [nextjs_ts]: https://github.com/zeit/next.js/tree/master/examples/custom-server-typescript
+[dockerurl]: https://cloud.docker.com/u/alucio/repository/docker/alucio/show-me-the-video
+[heroku]: https://show-me-the-video.herokuapp.com/
 

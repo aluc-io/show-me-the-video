@@ -1,5 +1,14 @@
 # show-me-the-video (SMTV)
 
+<!--
+[![Docker Automated](https://img.shields.io/docker/automated/alucio/show-me-the-video-example.svg)][dockerurl]
+[![Docker Build](https://img.shields.io/docker/build/alucio/show-me-the-video-example.svg)][dockerurl]
+-->
+[![Docker Pulls](https://img.shields.io/docker/pulls/alucio/show-me-the-video.svg)][dockerurl]
+[![Docker Layers](https://img.shields.io/microbadger/layers/alucio/show-me-the-video.svg)][dockerurl]
+[![Docker Size](https://img.shields.io/microbadger/image-size/alucio/show-me-the-video.svg)][dockerurl]
+[![Heroku deploy](https://heroku-badge.herokuapp.com/?app=show-me-the-video&style=flat&svg=1)][heroku]
+
 SMTV is the project that generates a video clip web page similar to YouTube by
 parsing **Markdown documents** including the video contents. You can use
 github, gitlab as **backend repository** to create this web page.
@@ -154,3 +163,6 @@ Released under The MIT License.
 
 [smtv_example]: https://github.com/aluc-io/show-me-the-video-example
 [nextjs_ts]: https://github.com/zeit/next.js/tree/master/examples/custom-server-typescript
+[dockerurl]: https://cloud.docker.com/u/alucio/repository/docker/alucio/show-me-the-video
+[heroku]: https://show-me-the-video.herokuapp.com/
+
