@@ -155,6 +155,6 @@ Released under The MIT License.
 
 [smtv_example]: https://github.com/aluc-io/show-me-the-video-example
 [nextjs_ts]: https://github.com/zeit/next.js/tree/master/examples/custom-server-typescript
-[dockerurl]: https://cloud.docker.com/u/alucio/repository/docker/alucio/show-me-the-video
+[dockerurl]: https://hub.docker.com/r/alucio/show-me-the-video
 [heroku]: https://show-me-the-video.herokuapp.com/
 
