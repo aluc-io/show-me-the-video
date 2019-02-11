@@ -39,7 +39,7 @@ export const Footer = () => {
   return (
     <Box style={{ opacity, display }}>
       <h1>
-        <span>© 2019 alfreduc23. powered by </span>
+        <span>© 2019 <a href="https://aluc.io/pages/1--about">aluc.io</a>. powered by </span>
         <a href={CONST_SMTV_GITHUB_URL}>show-me-the-video</a>
       </h1>
       <Version>{process.env.SMTV_VERSION}</Version>

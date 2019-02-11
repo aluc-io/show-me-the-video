@@ -1,10 +1,6 @@
 import ReactPlayer from 'react-player';
 import { Player, BigPlayButton, ControlBar, PlaybackRateMenuButton } from 'video-react'
 import styled from '../style/styled-component'
-import { useState, useContext, useEffect } from 'react';
-import { AppContext } from '../context';
-
-const isServer = !! process.env.APPLICATION_CONFIG
 
 const VideoContainer = styled.div`
   position: relative;
@@ -12,13 +8,12 @@ const VideoContainer = styled.div`
   height: 0px;
 `
 
-const VideoFrame = styled.div<{ position: string }>`
-  position: ${p => p.position};
-  z-index: 1;
+const VideoFrame = styled.div`
+  position: absolute;
   top: 0px;
-  left: 0px;
   width: 100%;
   height: 100%;
+  max-width: 960px;
 
   & div:focus {
     outline: none;
@@ -31,10 +26,9 @@ interface IProps {
   type: string
 }
 export const VideoPlayer = ({ videoUrl, type,thumbnailUrl }: IProps) => {
-  const position = usePosition()
   return (
     <VideoContainer>
-      <VideoFrame position={position}>
+      <VideoFrame>
         {type === 'MEDIA_URL' && (
           <Player src={videoUrl} poster={thumbnailUrl} playsInline >
             <BigPlayButton position="center" />
@@ -47,24 +41,4 @@ export const VideoPlayer = ({ videoUrl, type,thumbnailUrl }: IProps) => {
       </VideoFrame>
     </VideoContainer>
   )
-}
-
-const usePosition = () => {
-  const [position,setPosition] = useState<string>('absolute')
-  const { theme } = useContext(AppContext)
-
-  const handleEvent = () => {
-    const newPosition = document.documentElement.scrollTop >= theme.headerHeight
-      ? 'fixed' : 'absolute'
-    if (position !== newPosition) setPosition(newPosition)
-  }
-
-  useEffect(() => {
-    if (isServer) return 
-    window.addEventListener('scroll', handleEvent)
-    return () => window.removeEventListener('scroll', handleEvent)
-  })
-
-  console.log(position)
-  return position
 }
