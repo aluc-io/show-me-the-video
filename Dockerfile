@@ -7,16 +7,16 @@ COPY package.json /root/app/package.json
 COPY tsconfig.json /root/app/tsconfig.json
 COPY tsconfig.server.json /root/app/tsconfig.server.json
 COPY .babelrc.js /root/app/.babelrc.js
-RUN rm -rfv /root/app/src/.next
 WORKDIR /root/app
 
 ARG SMTV_VERSION
-RUN yarn
-RUN export SMTV_VERSION=$SMTV_VERSION \
-  && export NODE_ENV=production
-RUN yarn build
-
-RUN apk update && apk add git jq
-RUN yarn remove $(cat package.json | jq -r '.devDependencies | keys | join(" ")')
+RUN rm -rfv /root/app/src/.next \
+  && yarn install \
+  && export SMTV_VERSION=$SMTV_VERSION \
+  && export NODE_ENV=production \
+  && yarn build \
+  && apk update && apk add git jq \
+  && yarn remove $(cat package.json | jq -r '.devDependencies | keys | join(" ")') \
+  && apk remove jq
 
 CMD yarn start
