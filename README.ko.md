@@ -126,13 +126,25 @@ $ docker run --rm -d -p8082:80 alucio/show-me-the-video-example
 ## Font
 - https://google-webfonts-helper.herokuapp.com
 
-## 컨테이너로 heroku 배포
+## heroku 컨테이너 배포
 
+push:
+```sh
+$ heroku container:push web --arg SMTV_VERSION=$(git describe)
+
+## 또는 이미 빌드된 Docker 이미지를 사용할 수 있음. ex) alucio/show-me-the-video:<tagname>
+$ docker tag <image> registry.heroku.com/<app>/web
+$ docker push registry.heroku.com/<app>/web
+```
+
+`<app>` 은 heroku 앱 이름. `heroku create` 명령어로 생성할 수 있음.
+
+run:
 ```sh
 $ export APPLICATION_CONFIG=$(node src/bin/yaml-to-json.js application.yml)
 $ heroku config:set APPLICATION_CONFIG=$APPLICATION_CONFIG
 $ heroku config:get APPLICATION_CONFIG
-$ heroku container:push web --arg SMTV_VERSION=$(git describe)
+
 $ heroku container:release web
 $ heroku open
 ```

@@ -136,11 +136,23 @@ $ docker run --rm -d -p8082:80 alucio/show-me-the-video-example
 
 ## heroku deploy using container
 
+push:
+```sh
+$ heroku container:push web --arg SMTV_VERSION=$(git describe)
+
+## Or you can use existing docker image. ex) alucio/show-me-the-video:<tagname>
+$ docker tag <image> registry.heroku.com/<app>/web
+$ docker push registry.heroku.com/<app>/web
+```
+
+`<app>` is your heroku app name. You can create it by `heroku create`.
+
+run:
 ```sh
 $ export APPLICATION_CONFIG=$(node src/bin/yaml-to-json.js application.yml)
 $ heroku config:set APPLICATION_CONFIG=$APPLICATION_CONFIG
 $ heroku config:get APPLICATION_CONFIG
-$ heroku container:push web --arg SMTV_VERSION=$(git describe)
+
 $ heroku container:release web
 $ heroku open
 ```
