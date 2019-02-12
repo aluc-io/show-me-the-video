@@ -1,3 +1,5 @@
 #!/bin/bash
+env
+echo $CACHE_TAG
 docker build --build-arg SMTV_VERSION=$CACHE_TAG -f $DOCKERFILE_PATH -t $IMAGE_NAME .
 
