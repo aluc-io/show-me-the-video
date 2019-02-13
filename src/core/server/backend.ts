@@ -46,9 +46,12 @@ const _getRepoPath = async (repoUrl: string) => {
 
   if (oc(stat).isDirectory() && oc(dotGitStat).isDirectory()) {
     // true, true
-    const [err3] = await to(git(dirPath).pull())
+    const [err3] = await to(git(dirPath).fetch())
     if (err3) throw err3
-    logger.debug(`success. git pull ${dirPath}`)
+
+    const [err4] = await to(git(dirPath).reset(["origin/master","--hard"]))
+    if (err4) throw err4
+    logger.debug(`success. ${dirPath} git fetch, reset origin/master`)
 
   } else if (oc(stat).isDirectory() && !oc(dotGitStat).isDirectory()) {
     // true, false

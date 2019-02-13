@@ -58,9 +58,11 @@ app.prepare().then(() => {
     const parsedUrl = parse(req.url, true)
     handle(req,res,parsedUrl)
   })
+
   server.listen( port, (err: any) => {
     if (err) throw err
-    logger.debug(`> Ready on http://localhost:${port}`)
+    logger.info(`SMTG_VERSION: ${process.env.SMTV_VERSION}`)
+    logger.info(`> Ready on http://localhost:${port}`)
   })
 })
 
