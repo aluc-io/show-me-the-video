@@ -61,7 +61,7 @@ app.prepare().then(() => {
 
   server.listen( port, (err: any) => {
     if (err) throw err
-    logger.info(`SMTG_VERSION: ${process.env.SMTV_VERSION}`)
+    logger.info(`SMTV_VERSION: ${process.env.SMTV_VERSION}`)
     logger.info(`> Ready on http://localhost:${port}`)
   })
 })

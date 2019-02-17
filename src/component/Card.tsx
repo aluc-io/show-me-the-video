@@ -8,9 +8,12 @@ import { Link } from '../routes'
 
 const Card = styled.div`
   cursor: pointer;
-  margin: .6em 0px;
   width: ${p => p.theme.cardWidth}px;
-  @media ${media.xs} { width: 100%; }
+  margin: 0 ${p => p.theme.cardMargin}px;
+  @media ${media.xs} {
+    width: 100%;
+    margin: 0px;
+  }
 
   ${p => lo(p.theme.showLayout, "Card", "rgba(133, 233, 133, 0.65)" )}
   &:hover .info {
@@ -87,6 +90,7 @@ const InfoBox = styled.div`
   line-height: 18px;
   font-size: .9em;
   align-items: baseline;
+  height: 54px;
   ${p => lo(p.theme.showLayout, "", "rgba(33, 13, 133, 0.45)" )}
 `
 
@@ -95,6 +99,9 @@ const Title = styled.div`
   ${p => lo(p.theme.showLayout, "Title", "rgba(233, 83, 133, 0.45)" )}
 
   & h5 {
+    display: block;
+    display: -webkit-box;
+
     box-shadow: rgb(251, 250, 252) 0px 0px 0px 0px inset;
     transition: box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0s, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0s;
     padding-bottom: 0;
@@ -109,11 +116,17 @@ const Title = styled.div`
     font-rendering: optimizeLegibility;
     font-family: Roboto, 'Nanum Gothic Coding';
     white-space: pre-line;
+
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
+
+    -ms-line-clamp: 2;
+    -ms-box-orient: vertical;
+
     text-overflow: ellipsis;
-    display: -webkit-box;
     overflow: hidden;
+
+    max-height: calc(2em * 1.1);
   }
 `
 
@@ -121,7 +134,11 @@ const SubInfo = styled.div`
   text-align: left;
 `
 
-const CardComponent: React.FunctionComponent<IDocInfo & {repoIdx: number}> = props => {
+interface ICardComponentProps extends IDocInfo {
+  repoIdx: number
+}
+
+const CardComponent: React.FunctionComponent<ICardComponentProps> = props => {
   const { repoIdx, title, thumbnailUrl, id: docId , createTime, author, duration } = props
   const ct = new Date(createTime)
   return (
