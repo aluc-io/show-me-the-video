@@ -15,7 +15,7 @@ import { oc } from 'ts-optchain'
 import * as memoizee from 'memoizee'
 
 import config from './config'
-import { IDocInfo } from "global";
+import { IDocInfo, IYoutubeDocInfo } from "global";
 import { TGetDocInfoArr } from "../interface";
 
 import { getDocInfo as getDocInfoFromYoutube, getEmptyDocInfo as getEmptyDocInfoFromYoutube } from './backendYoutube'
@@ -102,8 +102,12 @@ const parseVideoInfo: TParseDocInfo  = async (filename, text) => {
   const videoUrl = (tokenArr.links.videourl || emptyLink).href
   const matched = videoUrl.match(ytMatcher)
   const emptyYoutubeInfo = getEmptyDocInfoFromYoutube()
-  let infoFromYoutube = emptyYoutubeInfo
-  if (matched) infoFromYoutube = await getDocInfoFromYoutube(matched[5])
+
+  let infoFromYoutube: IYoutubeDocInfo | undefined
+  let err: any
+  if (matched) [err, infoFromYoutube] = await to(getDocInfoFromYoutube(matched[5]))
+  if (err) logger.error(err)
+  infoFromYoutube = infoFromYoutube || emptyYoutubeInfo
 
   const infoFromMarkdown = getDocInfoFromMarkdown(tokenArr)
   const ommitedMarkdownInfo = omitBy(infoFromMarkdown, item => ! item)
@@ -121,7 +125,8 @@ const parseVideoInfo: TParseDocInfo  = async (filename, text) => {
     id: md5(filename).substr(0,8),
     filename: filename,
     text,
-    type: infoFromYoutube.title ? 'YOUTUBE' : 'MEDIA_URL',
+    type: matched ? 'YOUTUBE' : 'MEDIA_URL',
+    isDeleted: !! err
   }
 }
 

@@ -39,6 +39,7 @@ interface IDocInfo extends IMarkdownDocInfo {
   text: string
   videoUrl: string
   type: 'MEDIA_URL' | 'YOUTUBE'
+  isDeleted: boolean
 }
 
 interface IRepoInfo {

@@ -19,6 +19,7 @@ const _getDocInfo: TGetDocInfo = async (id) => {
   if (!videoRes.data.items) throw new Error('SMTV_ERROR_129312_NO_YOUTUBE_ITEM')
 
   const videoItem = videoRes.data.items[0]
+  if (!videoItem) throw new Error('SMTV_ERROR_4129')
   if (!videoItem.snippet) throw new Error('SMTV_ERROR_4123')
   if (!videoItem.snippet.thumbnails) throw new Error('SMTV_ERROR_4127')
   if (!videoItem.contentDetails) throw new Error('SMTV_ERROR_4124_NO_CONTENT_DETAILS_IN_VIDEO_RES')
@@ -37,7 +38,7 @@ const _getDocInfo: TGetDocInfo = async (id) => {
   duration = duration.replace(/^PT/,'').replace(/S$/g,'').replace(/[HM]/g,':')
 
   const thumbnailUrl = thumbnails.high
-    ? thumbnails.high.url : thumbnails.default 
+    ? thumbnails.high.url : thumbnails.default
     ? thumbnails.default.url : ''
 
   const emptyInfo = getEmptyDocInfo()
