@@ -16,8 +16,8 @@ import memoizee from 'memoizee'
 
 import { TGetDocInfoArr } from "../interface";
 
-import { getDocInfo as getDocInfoFromYoutube, getEmptyDocInfo as getEmptyDocInfoFromYoutube } from './backendYoutube'
-import { getDocInfo as getDocInfoFromMarkdown } from './backendMarkdown'
+import { getDocInfo as getDocInfoFromYoutube, getEmptyDocInfo as getEmptyDocInfoFromYoutube } from './backend-youtube'
+import { getDocInfo as getDocInfoFromMarkdown } from './backend-markdown'
 import { IYoutubeDocInfo, IDocInfo } from "../../@types/global";
 
 const fs = promises
@@ -91,8 +91,30 @@ const readFile = async (absolutePath: string) => {
 const emptyLink = { href: "", title: "" }
 // const emptyHeading: Tokens.Heading = { type: 'heading', depth: -1, text: "" }
 
+export const getDraftDocInfo = () => {
+  const docInfo: IDocInfo = {
+    id: '',
+    filename: '',
+    isDeleted: false,
+    text: '',
+    type: 'MEDIA_URL',
+    videoUrl: '',
+    title: '',
+    thumbnailUrl: '',
+    tagArr: [],
+    prev: '',
+    next: '',
+    author: '',
+    createTime: '',
+    updateTime: '',
+    isDraft: true,
+    duration: '',
+  }
+  return docInfo
+}
+
 type TParseDocInfo = (filename: string, text: string) => Promise<IDocInfo>
-const parseVideoInfo: TParseDocInfo  = async (filename, text) => {
+const parseVideoInfo: TParseDocInfo = async (filename, text) => {
   const tokenArr = marked.lexer(text)
 
   // https://stackoverflow.com/questions/19377262/regex-for-youtube-url
@@ -102,15 +124,16 @@ const parseVideoInfo: TParseDocInfo  = async (filename, text) => {
   const emptyYoutubeInfo = getEmptyDocInfoFromYoutube()
 
   let infoFromYoutube: IYoutubeDocInfo | undefined
-  let err: any
-  if (matched) [err, infoFromYoutube] = await to(getDocInfoFromYoutube(matched[5]))
-  if (err) logger.error(err)
+  let youtubeError: any
+  if (matched) [youtubeError, infoFromYoutube] = await to(getDocInfoFromYoutube(matched[5]))
+  if (youtubeError) logger.error(youtubeError)
   infoFromYoutube = infoFromYoutube || emptyYoutubeInfo
 
   const infoFromMarkdown = getDocInfoFromMarkdown(tokenArr)
   const ommitedMarkdownInfo = omitBy(infoFromMarkdown, item => ! item)
-  const ommitedYoutubeInfo = omitBy(infoFromYoutube, item => ! item)
+  if (ommitedMarkdownInfo.isDraft) return getDraftDocInfo()
 
+  const ommitedYoutubeInfo = omitBy(infoFromYoutube, item => ! item)
   if(!ommitedMarkdownInfo.title && ommitedYoutubeInfo.title) {
     text = `# ${ommitedYoutubeInfo.title}\n\n${text}`
   }
@@ -124,7 +147,7 @@ const parseVideoInfo: TParseDocInfo  = async (filename, text) => {
     filename: filename,
     text,
     type: matched ? 'YOUTUBE' : 'MEDIA_URL',
-    isDeleted: !! err
+    isDeleted: !! youtubeError
   }
 }
 
@@ -140,6 +163,8 @@ export const getDocInfoArr: TGetDocInfoArr = async (cloneUrl, docDirectory) => {
     const docInfo = await parseVideoInfo(baseFilename,text)
     return docInfo
   })
-  const docInfoArr = await Promise.all(promiseArr)
+  let docInfoArr = await Promise.all(promiseArr)
+  docInfoArr = lodashReject(docInfoArr, docInfo => !! docInfo.isDraft)
+  docInfoArr = lodashReject(docInfoArr, docInfo => !! docInfo.isDeleted)
   return docInfoArr
 }

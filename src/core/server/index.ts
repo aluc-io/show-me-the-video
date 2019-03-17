@@ -1,6 +1,6 @@
 import { getDocInfoArr } from './backend'
 import config from './config'
-import { find, reject } from 'lodash'
+import { find } from 'lodash'
 import { TGetRepoInfo, TGetRepoInfoArr, TGetSiteInfo, TGetDocInfo } from '../interface';
 import { IRepoInfo } from '../../@types/global';
 
@@ -18,7 +18,7 @@ const getRepoInfoArr: TGetRepoInfoArr = async () => {
       publicUrl: repo.publicUrl,
       managerId: repo.managerId,
       docDirectory: repo.docDirectory,
-      docInfoArr: reject(docInfoArr, item => item.isDeleted),
+      docInfoArr: docInfoArr,
     }
     return repoInfo
   })
