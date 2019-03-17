@@ -2,9 +2,10 @@ import * as React from 'react'
 import TimeAgo from 'react-timeago'
 import styled from '../style/styled-component'
 import media from '../style/media'
-import { IDocInfo } from 'global'
+// import { IDocInfo } from '../@types/global'
 import { layout as lo } from '../style/polished'
 import { Link } from '../routes'
+import { IDocInfo } from 'src/@types/global';
 
 const Card = styled.div`
   cursor: pointer;

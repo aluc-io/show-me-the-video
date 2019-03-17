@@ -1,7 +1,7 @@
 import to from 'await-to-js'
 import axios from 'axios'
 import { TGetDocInfo, TGetSiteInfo, TGetRepoInfo, TGetRepoInfoArr } from '../interface';
-import * as memoizee from 'memoizee'
+import memoizee from 'memoizee'
 
 const _getDocInfo: TGetDocInfo = async (repoIdx, docId) => {
   const [err,res] = await to( axios.get(`/api/v1/${repoIdx}/${docId}`))

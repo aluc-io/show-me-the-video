@@ -1,12 +1,12 @@
 import { getDocInfoArr } from './backend'
 import config from './config'
 import { find, reject } from 'lodash'
-import { IRepoInfo } from 'global';
 import { TGetRepoInfo, TGetRepoInfoArr, TGetSiteInfo, TGetDocInfo } from '../interface';
+import { IRepoInfo } from '../../@types/global';
 
 const getRepoInfoArr: TGetRepoInfoArr = async () => {
   const { backendRepos } = config
-  const promiseArr = backendRepos.map((_,i) => getDocInfoArr(i))
+  const promiseArr = backendRepos.map(r => getDocInfoArr(r.cloneUrl, r.docDirectory))
   const docInfoArrArr = await Promise.all(promiseArr)
 
   return backendRepos.map( (repo,i) => {

@@ -1,8 +1,8 @@
 import { google } from 'googleapis'
-import { IYoutubeDocInfo } from "global";
+import { IYoutubeDocInfo } from "../../@types/global";
 
 import config from './config'
-import * as memoizee from 'memoizee'
+import memoizee from 'memoizee'
 
 const youtube = google.youtube({
   version: 'v3',

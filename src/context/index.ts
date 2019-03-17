@@ -1,7 +1,7 @@
 import { createContext } from 'react'
-import { IRepoInfo, ISiteInfo } from 'global'
 import IThemeInterface from '../style/theme'
 import theme from '../style/theme-light'
+import { ISiteInfo, IRepoInfo } from 'src/@types/global';
 
 interface IAppContext {
   showLayout: boolean

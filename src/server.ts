@@ -1,7 +1,7 @@
 import { parse } from 'url'
-import * as path from 'path'
-import * as express from 'express'
-import * as next from 'next'
+import path from 'path'
+import express from 'express'
+import next from 'next'
 import { console } from 'tracer'
 
 import { getRepoInfoArr, getDocInfo, getSiteInfo, getRepoInfo } from './core/server'
@@ -11,6 +11,7 @@ const logger = console()
 const port = parseInt(process.env.PORT || "3000", 10) || 3000
 const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev, dir: 'src' })
+
 const handle = app.getRequestHandler()
 
 app.prepare().then(() => {

@@ -1,10 +1,10 @@
 import * as React from 'react'
 
-import { IRepoInfo } from 'global';
 import styled from '../style/styled-component'
 import media from '../style/media'
 import { layout as lo } from '../style/polished'
 import Card from './Card'
+import { IRepoInfo } from 'src/@types/global';
 
 const CardBoxRoot = styled.div`
   margin: .8em .8em 1.4em .8em;

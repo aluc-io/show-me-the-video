@@ -1,13 +1,13 @@
 import * as React from 'react'
 import { useContext, useState } from 'react';
 import { DefaultQuery, withRouter, WithRouterProps } from 'next/router'
-import * as ReactMarkdown from 'react-markdown'
+import ReactMarkdown from 'react-markdown'
 import * as mime from 'mime-types'
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import { NextContext } from 'next';
 import Button, { ButtonProps } from '@material-ui/core/Button'
 
-import { IStatelessPage, IDocInfo, IRepoInfo } from 'global';
+import { IStatelessPage, IDocInfo, IRepoInfo } from 'src/@types/global';
 import styled from '../style/styled-component'
 import { AppContext } from '../context';
 import markdownCss from '../markdownCss'

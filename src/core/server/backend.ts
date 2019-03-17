@@ -1,33 +1,31 @@
 import * as path from "path"
-import * as git from "simple-git/promise"
+import git from "simple-git/promise"
 
 import to from 'await-to-js'
 import { promises } from 'fs'
 
 import { filter, reject as lodashReject, last, omitBy } from 'lodash'
 
-import * as marked from 'marked'
-import * as md5 from 'md5'
+import marked from 'marked'
+import md5 from 'md5'
 import * as readdirEnhanced from 'readdir-enhanced'
 import * as tracer from 'tracer'
 import { CONST_GITREPO_PATH } from '../constant'
 import { oc } from 'ts-optchain'
-import * as memoizee from 'memoizee'
+import memoizee from 'memoizee'
 
-import config from './config'
-import { IDocInfo, IYoutubeDocInfo } from "global";
 import { TGetDocInfoArr } from "../interface";
 
 import { getDocInfo as getDocInfoFromYoutube, getEmptyDocInfo as getEmptyDocInfoFromYoutube } from './backendYoutube'
 import { getDocInfo as getDocInfoFromMarkdown } from './backendMarkdown'
+import { IYoutubeDocInfo, IDocInfo } from "../../@types/global";
 
 const fs = promises
 const logger = tracer.console()
 
 const getPathFromGitRepoUrl = (url: string) => {
-  if (!url) {
-    throw new Error('SMTV_ERROR_2004 no url')
-  }
+  if (!url) throw new Error('SMTV_ERROR_2004 no url')
+
   const projectName = last(url.split('/'))!.replace(/\.git$/,'')
   return `${CONST_GITREPO_PATH}/${projectName}.${md5(url)}`
 }
@@ -130,12 +128,8 @@ const parseVideoInfo: TParseDocInfo  = async (filename, text) => {
   }
 }
 
-export const getDocInfoArr: TGetDocInfoArr = async (repoIdx) => {
-  repoIdx = Number(repoIdx)
-  const backendRepo = config.backendRepos[repoIdx]
-  const { cloneUrl, docDirectory } = backendRepo
-
-  const repoPath = getPathFromGitRepoUrl(backendRepo.cloneUrl)
+export const getDocInfoArr: TGetDocInfoArr = async (cloneUrl, docDirectory) => {
+  const repoPath = getPathFromGitRepoUrl(cloneUrl)
   const [err] = await to( getRepoPath(cloneUrl))
   if (err) throw err
 

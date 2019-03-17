@@ -1,6 +1,6 @@
 import { TokensList, Token, Tokens } from "marked"
 import { find } from "lodash"
-import { IMarkdownDocInfo } from "global";
+import { IMarkdownDocInfo } from "../../@types/global";
 
 const emptyLink = { href: "", title: "" }
 

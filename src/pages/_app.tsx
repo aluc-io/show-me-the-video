@@ -10,8 +10,8 @@ import { getRepoInfoArr, getSiteInfo } from '../core'
 import { GlobalStyle } from '../style/GlobalStyle'
 import theme from '../style/theme-light'
 import { ThemeProvider } from '../style/styled-component'
-import { ISiteInfo, IRepoInfo } from 'global';
-import IThemeInterface from 'src/style/theme';
+import { ISiteInfo, IRepoInfo } from '../@types/global';
+import IThemeInterface from '../../src/style/theme';
 
 const isServer = !! process.env.APPLICATION_CONFIG
 
@@ -24,7 +24,7 @@ interface IAppProps extends DefaultAppIProps, AppProps {
 
 const CustomApp = (props: IAppProps) => {
   const { Component, pageProps, repoInfoArr, siteInfo, showLayout, theme } = props
-  const value = { 
+  const value = {
     ...useShowLayout(showLayout),
     ...useRepoInfoArr(repoInfoArr),
     ...useSiteInfo(siteInfo),
