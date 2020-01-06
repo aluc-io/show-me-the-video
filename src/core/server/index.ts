@@ -1,15 +1,16 @@
 import { getDocInfoArr } from './backend'
 import config from './config'
 import { find } from 'lodash'
-import { IRepoInfo } from 'global';
 import { TGetRepoInfo, TGetRepoInfoArr, TGetSiteInfo, TGetDocInfo } from '../interface';
+import { IRepoInfo } from '../../@types/global';
 
 const getRepoInfoArr: TGetRepoInfoArr = async () => {
   const { backendRepos } = config
-  const promiseArr = backendRepos.map((_,i) => getDocInfoArr(i))
+  const promiseArr = backendRepos.map(r => getDocInfoArr(r.cloneUrl, r.docDirectory))
   const docInfoArrArr = await Promise.all(promiseArr)
 
   return backendRepos.map( (repo,i) => {
+    const docInfoArr = docInfoArrArr[i]
     const repoInfo: IRepoInfo = {
       idx: i,
       type: repo.type,
@@ -17,7 +18,7 @@ const getRepoInfoArr: TGetRepoInfoArr = async () => {
       publicUrl: repo.publicUrl,
       managerId: repo.managerId,
       docDirectory: repo.docDirectory,
-      docInfoArr: docInfoArrArr[i],
+      docInfoArr: docInfoArr,
     }
     return repoInfo
   })

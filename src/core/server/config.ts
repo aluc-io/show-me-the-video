@@ -1,8 +1,8 @@
 import * as tracer from 'tracer'
 
-import * as yamlToJson from '../../bin/yaml-to-json'
+import { convert } from '../../bin/yaml-to-json'
 import { isEmpty } from 'lodash'
-import { IApplicationConfig } from 'global';
+import { IApplicationConfig } from '../../@types/global';
 import { CONST_DOC_DIRECTORY } from '../constant';
 
 const logger = tracer.console()
@@ -15,9 +15,9 @@ if (process.env.APPLICATION_CONFIG) {
 
 if (!config || isEmpty(config)) {
   try {
-    config = yamlToJson('application.yml')
+    config = convert('application.yml')
   } catch(e) {
-    config = yamlToJson('application.yaml')
+    config = convert('application.yaml')
   }
 }
 
@@ -27,7 +27,7 @@ if (!config || isEmpty(config)) {
 }
 
 config.backendRepos = config.backendRepos.map( br => {
-  return { 
+  return {
     ...br,
     docDirectory: br.docDirectory || CONST_DOC_DIRECTORY,
   }

@@ -39,6 +39,7 @@ export default class MyDocument extends Document<IDocumentProps> {
         <Head>
           {this.props.styleTags}
           <meta name="viewport" content="width=device-width, initial-scale=1"/>
+          <meta content="IE=edge,chrome=1" httpEquiv="X-UA-Compatible"/>
           <style
             id="jss-server-side"
             dangerouslySetInnerHTML={{

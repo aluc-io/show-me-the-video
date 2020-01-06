@@ -19,7 +19,8 @@ RUN rm -rfv /root/app/src/.next \
   && apk update \
   && apk add git jq \
   && yarn remove $(cat package.json | jq -r '.devDependencies | keys | join(" ")') \
-  && apk del jq
+  && apk del jq \
+  && rm -rf /var/cache/apk/*
 
 ENV NODE_ENV=production
 

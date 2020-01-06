@@ -61,21 +61,7 @@ Description:
   }>
 ```
 
-When it run in Docker container, it is better to provide configuration via
-`APPLICATION_CONFIG` environment variables rather than copying
-`application.yml` into the Docker image. You can convert the
-`application.yml` file to json and put it in the `APPLICATION_CONFIG`
-environment variable:
-
-```sh
-$ export APPLICATION_CONFIG=$(node src/bin/yaml-to-json.js application.yml)
-
-## heroku usage example:
-$ heroku config:set APPLICATION_CONFIG=$APPLICATION_CONFIG
-$ heroku config:get APPLICATION_CONFIG
-```
-
-## Markdown rules
+## Guide to write Markdown document
 
 ```markdown
 [videoUrl]: http://127.0.0.1:8082/example-video-01.mp4
@@ -113,6 +99,46 @@ part. Without this part, the video player will not appear.
 | createTime   |   optional | upload date                        |
 | updateTime   |   optional | last update date                   |
 
+When it run in Docker container, it is better to provide configuration via
+`APPLICATION_CONFIG` environment variables rather than copying
+`application.yml` into the Docker image. You can convert the
+`application.yml` file to json and put it in the `APPLICATION_CONFIG`
+environment variable:
+
+```sh
+## Use docker hub image.
+$ export APPLICATION_CONFIG=$(npx js-yaml application.yml | jq -c)
+$ docker run --env APPLICATION_CONFIG=$APPLICATION_CONFIG -d -p8888:3000 alucio/show-me-the-video
+$ open http://localhost:8888/
+```
+
+## 서버 실행
+
+```
+$ yarn build
+$ yarn start
+$ open http://localhost:3000/
+```
+
+### Using Docker image
+When running in the Docker container, the contents of the `application.yaml`
+can be supplied through the` APPLICATION_CONFIG` environment variable.
+
+> `APPLICATION_CONFIG` 환경변수와 `application.yaml` 파일이 동시에 있을 땐
+`APPLICATION_CONFIG` 의 설정이 우선됨
+
+When the `APPLICATION_CONFIG` environment variable and
+the` application.yaml` file are present at the same time,
+the `APPLICATION_CONFIG` takes priority
+
+```sh
+## exiest
+$ export APPLICATION_CONFIG=$(npx js-yaml application.yml | jq -c)
+$ docker run --env APPLICATION_CONFIG=$APPLICATION_CONFIG -d -p8888:3000 alucio/show-me-the-video
+$ open http://localhost:8888/
+```
+
+
 # Development
 
 ## Install dependencies and Run development server
@@ -131,16 +157,40 @@ images using pre built docker image.
 $ docker run --rm -d -p8082:80 alucio/show-me-the-video-example
 ```
 
+## Unit Test
+
+```sh
+$ npx jest
+```
+
+### Test only specific test case
+
+```sh
+$ npx jest __tests__/core__server__index.test.ts
+```
+
 ## Font
 - https://google-webfonts-helper.herokuapp.com
 
 ## heroku deploy using container
 
+push:
 ```sh
-$ export APPLICATION_CONFIG=$(node src/bin/yaml-to-json.js application.yml)
+$ heroku container:push web --arg SMTV_VERSION=$(git describe)
+
+## Or you can use existing docker image. ex) alucio/show-me-the-video:<tagname>
+$ docker tag <image> registry.heroku.com/<app>/web
+$ docker push registry.heroku.com/<app>/web
+```
+
+`<app>` is your heroku app name. You can create it by `heroku create`.
+
+run:
+```sh
+$ export APPLICATION_CONFIG=$(npx ts-node src/bin/yaml-to-json.ts application.yml)
 $ heroku config:set APPLICATION_CONFIG=$APPLICATION_CONFIG
 $ heroku config:get APPLICATION_CONFIG
-$ heroku container:push web --arg SMTV_VERSION=$(git describe)
+
 $ heroku container:release web
 $ heroku open
 ```

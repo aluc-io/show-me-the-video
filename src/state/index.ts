@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { IRepoInfo } from 'global';
+import { IRepoInfo } from 'src/@types/global';
 
 export const useShowLayout = (initialValue: boolean) => {
   initialValue = !! initialValue

@@ -55,21 +55,9 @@ Description:
   }>
 ```
 
-Docker 컨테이너에서 실행 할 땐, `application.yml` 파일을 Docker 이미지 내로
-복사 하는 것 보다 `APPLICATION_CONFIG` 환경변수를 통해 제공하는 것이 더 좋다.
-`application.yml` 파일을 json 으로 변환 후 `APPLICATION_CONFIG` 환경 변수에 셋팅
-하는 방법:
+## Markdown 문서 작성 가이드
 
-```sh
-$ export APPLICATION_CONFIG=$(node src/bin/yaml-to-json.js application.yml)
-
-## heroku 사용시 예제:
-$ heroku config:set APPLICATION_CONFIG=$APPLICATION_CONFIG
-$ heroku config:get APPLICATION_CONFIG
-```
-
-## Markdown rules
-
+예:
 ```markdown
 [videoUrl]: http://127.0.0.1:8082/example-video-01.mp4
 [thumbnailUrl]: http://127.0.0.1:8082/example-image-01.webp
@@ -106,6 +94,28 @@ $ heroku config:get APPLICATION_CONFIG
 | createTime   |   optional | 생성 시간                          |
 | updateTime   |   optional | 변경 시간                          |
 
+## 서버 실행
+
+```
+$ yarn build
+$ yarn start
+$ open http://localhost:3000/
+```
+
+### Using Docker image
+Docker 컨테이너에서 실행 할 땐, `application.yaml` 의 내용을
+`APPLICATION_CONFIG` 환경변수를 통해 제공 할 수 있음
+
+> `APPLICATION_CONFIG` 환경변수와 `application.yaml` 파일이 동시에 있을 땐
+`APPLICATION_CONFIG` 의 설정이 우선됨
+
+```sh
+$ export APPLICATION_CONFIG=$(npx js-yaml application.yml | jq -c)
+$ docker run --env APPLICATION_CONFIG=$APPLICATION_CONFIG -d -p8888:3000 alucio/show-me-the-video
+$ open http://localhost:8888/
+```
+
+
 # 개발 가이드
 
 ## 종속성 설치 및 서버 실행
@@ -123,16 +133,40 @@ $ yarn dev
 $ docker run --rm -d -p8082:80 alucio/show-me-the-video-example
 ```
 
+## 유닛 테스트
+
+```sh
+$ npx jest
+```
+
+### 특정 테스트 케이만 테스트
+
+```sh
+$ npx jest __tests__/core__server__index.test.ts
+```
+
 ## Font
 - https://google-webfonts-helper.herokuapp.com
 
-## 컨테이너로 heroku 배포
+## heroku 컨테이너 배포
 
+push:
+```sh
+$ heroku container:push web --arg SMTV_VERSION=$(git describe)
+
+## 또는 이미 빌드된 Docker 이미지를 사용할 수 있음. ex) alucio/show-me-the-video:<tagname>
+$ docker tag <image> registry.heroku.com/<app>/web
+$ docker push registry.heroku.com/<app>/web
+```
+
+`<app>` 은 heroku 앱 이름. `heroku create` 명령어로 생성할 수 있음.
+
+run:
 ```sh
 $ export APPLICATION_CONFIG=$(node src/bin/yaml-to-json.js application.yml)
 $ heroku config:set APPLICATION_CONFIG=$APPLICATION_CONFIG
 $ heroku config:get APPLICATION_CONFIG
-$ heroku container:push web --arg SMTV_VERSION=$(git describe)
+
 $ heroku container:release web
 $ heroku open
 ```

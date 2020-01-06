@@ -1,13 +1,13 @@
 import * as React from 'react'
 import { useContext, useState } from 'react';
 import { DefaultQuery, withRouter, WithRouterProps } from 'next/router'
-import * as ReactMarkdown from 'react-markdown'
+import ReactMarkdown from 'react-markdown'
 import * as mime from 'mime-types'
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import { NextContext } from 'next';
-import Button from '@material-ui/core/Button'
+import Button, { ButtonProps } from '@material-ui/core/Button'
 
-import { IStatelessPage, IDocInfo, IRepoInfo } from 'global';
+import { IStatelessPage, IDocInfo, IRepoInfo } from 'src/@types/global';
 import styled from '../style/styled-component'
 import { AppContext } from '../context';
 import markdownCss from '../markdownCss'
@@ -45,8 +45,14 @@ const MarkdownStyle = styled.div`
   ${markdownCss}
 `
 
+const StyledButton: React.ComponentType<ButtonProps> = styled(Button)`
+  :first-child {
+    margin-right: 10px;
+  }
+`
+
 const ButtonGrid = styled.div`
-  display: grid;
+  display: flex;
   grid-template-columns: 1fr 1fr;
   justify-items: center;
   align-items: center;
@@ -126,7 +132,7 @@ const Guide: IStatelessPage<IGuideProps> = (props) => {
             <ReactMarkdown source={text} renderers={customRenderers}/>
           </MarkdownStyle>
           <ButtonGrid>
-            <Button
+            <StyledButton
               color="primary"
               size='large'
               fullWidth={true}
@@ -135,8 +141,8 @@ const Guide: IStatelessPage<IGuideProps> = (props) => {
             >
               <CloudUploadIcon style={leftIcon}/>
               질문/제안
-            </Button>
-            <Button
+            </StyledButton>
+            <StyledButton
               color="primary"
               size='large'
               fullWidth={true}
@@ -145,7 +151,7 @@ const Guide: IStatelessPage<IGuideProps> = (props) => {
             >
               <CloudUploadIcon style={leftIcon}/>
               편집
-            </Button>
+            </StyledButton>
           </ButtonGrid>
         </Container2>
       </Content>

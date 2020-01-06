@@ -3,8 +3,7 @@ import Link from 'next/link'
 import * as React from 'react'
 import { useContext } from 'react'
 import AppBar from '@material-ui/core/AppBar'
-import Toolbar from '@material-ui/core/Toolbar'
-
+import Toolbar, { ToolbarProps } from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
 import IconButton from '@material-ui/core/IconButton'
 import Switch from '@material-ui/core/Switch'
@@ -23,9 +22,7 @@ interface IHeaderProps {
   title?: string
 }
 
-const StyledToolbar = styled((props) => (
-  <Toolbar {...props} />
-))`
+const StyledToolbar: React.ComponentType<ToolbarProps> = styled(Toolbar)`
   min-height: ${p => p.theme.headerHeight}px !important;
 `
 

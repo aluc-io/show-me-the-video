@@ -1,7 +1,7 @@
 import { parse } from 'url'
-import * as path from 'path'
-import * as express from 'express'
-import * as next from 'next'
+import path from 'path'
+import express from 'express'
+import next from 'next'
 import { console } from 'tracer'
 
 import { getRepoInfoArr, getDocInfo, getSiteInfo, getRepoInfo } from './core/server'
@@ -11,6 +11,7 @@ const logger = console()
 const port = parseInt(process.env.PORT || "3000", 10) || 3000
 const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev, dir: 'src' })
+
 const handle = app.getRequestHandler()
 
 app.prepare().then(() => {
@@ -58,9 +59,11 @@ app.prepare().then(() => {
     const parsedUrl = parse(req.url, true)
     handle(req,res,parsedUrl)
   })
+
   server.listen( port, (err: any) => {
     if (err) throw err
-    logger.debug(`> Ready on http://localhost:${port}`)
+    logger.info(`SMTV_VERSION: ${process.env.SMTV_VERSION}`)
+    logger.info(`> Ready on http://localhost:${port}`)
   })
 })
 
